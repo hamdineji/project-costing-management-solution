@@ -14,7 +14,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Users',
-    icon: 'people-outline',
+    icon: 'person-outline',
     link: '/pages/users/user',
   },
   {
@@ -34,7 +34,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Ressources',
-    icon: 'home-outline',
+    icon: 'people-outline',
     link: '/pages/ressources/ressources',
   },
   {
@@ -44,7 +44,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Facturation',
-    icon: 'trending-up-outline',
+    icon: 'credit-card-outline',
     link: '/pages/facturation/facturation',
   },
   {

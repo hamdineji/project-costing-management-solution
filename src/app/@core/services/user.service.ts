@@ -9,7 +9,10 @@ query {
     id
     name
     role 
-    email 
+    email
+    projects 
+    image
+    departement
   }
 }
 `
@@ -21,6 +24,18 @@ getUserById ($id : ID ){
     name
     role 
     email 
+    projects
+    departement
+  }
+}
+`
+const getUsersByRole = gql `
+query 
+getUsersByRole ($id : ID ){
+    getUsersByRole(id : $id){
+    id
+    name
+    departement
   }
 }
 `
@@ -49,6 +64,12 @@ getUsers(){
 getUserById(id){
     return this.apollo.query({
         query : getUserById ,
+        variables : { id}
+    })
+}
+getUsersByRole(id){
+    return this.apollo.query({
+        query : getUsersByRole ,
         variables : { id}
     })
 }

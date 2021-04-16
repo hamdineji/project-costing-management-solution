@@ -30,7 +30,6 @@ export function persistStateReducer(reducer: ActionReducer<any>) {
   return (state: any | undefined, action: Action) => {
     // on state initialization the state is undefined
     // we want to retrieve the state from local storage now
-    console.log(state)
     if (state.User === undefined) {
 
       const persisted = localStorage.getItem(localStorageKey)

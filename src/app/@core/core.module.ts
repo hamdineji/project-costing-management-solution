@@ -60,6 +60,9 @@ import{PermissionGuardService} from './guards/permission.guard'
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptorService } from '../pages/token-interceptor.service';
 import {RoleService} from './services/role.service'
+import { ProjectService } from './services/projects.service';
+import { ClientService } from './services/clients.service';
+import { DepartementService } from './services/departements.service';
 
 const socialLinks = [
   {
@@ -156,6 +159,9 @@ export const NB_CORE_PROVIDERS = [
   PermissionService,
   RoleService,
   UserService,
+  ProjectService,
+  ClientService,
+  DepartementService,
   { provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptorService,
     multi: true

@@ -1,1 +1,65 @@
-<p>departement works!</p>
+<h2 style="text-align: center; margin-bottom : 3rem">Proxym's Departements</h2>
+<nb-card>
+<div fxLayout="row wrap" style="margin-top: 1rem;margin-left: 1rem;">
+    <div fxFlex="33%" *ngFor="let p of departements">
+    <div class="card-col" >
+      <nb-card size="meduim" style="margin-right: 1rem;" >
+        <nb-card-header style="background-color: darkgray;">  
+        <div class="row show-grid" >
+            <div class="col-md-8">
+                <h5>
+                  <nb-icon icon="npm-outline" style="margin-right: 1rem;" ></nb-icon>
+                  {{p.data.name}}</h5>
+             
+            </div>
+            <div class="col-md-1">
+                <nb-icon icon="list-outline" nbTooltip="show more details" ></nb-icon>
+            </div>
+            <div class="col-md-1">
+               <nb-icon icon="edit-outline" nbTooltip="edit departement"  style="margin-left: 1rem;" ></nb-icon>
+            </div>
+          </div>
+        </nb-card-header>
+        <table class="table ">
+            <th scope="row" >
+              <nb-icon icon="person-outline" style="margin-right: 1rem;"  ></nb-icon>
+              head Of Departements</th>
+            <td>{{p.data.headOfDep}}</td>
+            <tr >
+          <th scope="row"  >
+            <nb-icon icon="checkmark-outline" style="margin-right: 1rem;"  ></nb-icon>
+            doneProjects</th>
+          <td>{{p.data.doneProjects[0]}}</td>
+        </tr>
+          <tr>
+            <th scope="row" >
+              <nb-icon icon="sync-outline" style="margin-right: 1rem;"  ></nb-icon>
+              CR approvers</th>
+            <td *ngFor="let item of p.CR">{{item}} </td>
+          </tr>
+          <tr>
+            <th scope="row" >
+              <nb-icon icon="paper-plane-outline" style="margin-right: 1rem;"  ></nb-icon>
+              DR approvers</th>
+            <td>{{p.DR[0]}}</td>
+          </tr>
+          <tr>
+            <th scope="row" >
+              <nb-icon icon="briefcase-outline" style="margin-right: 1rem;"  ></nb-icon>
+
+              projects In Progression</th>
+            <td>{{p.data.projectsInProgression[0]}}</td>
+          </tr>
+          <tr>
+            <th scope="row" >
+              <nb-icon icon="people-outline" style="margin-right: 1rem;"  ></nb-icon>
+
+              number of Users </th>
+            <td>{{p.data.users[0]}}</td>
+          </tr>
+        </table>
+      </nb-card>
+    </div>
+    </div>
+</div>
+</nb-card>

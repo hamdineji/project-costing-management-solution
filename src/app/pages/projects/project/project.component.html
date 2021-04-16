@@ -1,1 +1,311 @@
-<p>project works!</p>
+<h2 style="text-align: center; margin-bottom : 3rem">Project List</h2>
+<nb-card>
+<div class="row show-grid" style="margin-top: 1rem; ">
+  <div class="col-md-9" style="margin-left: 2rem;">
+    <h3>all proxym's projects</h3> 
+  </div>
+  <div class="col-md-2">
+<button (click)="openAddProjectForm()"  *ifPermission='["addProject"]' nbButton> 
+  <nb-icon icon="plus-outline"  ></nb-icon>
+  Add Project</button>
+  </div>
+</div>
+<div *ifPermission='["getAllProjects"]'>
+
+<div fxLayout="row wrap" style="margin-left: 2rem;">
+    <div fxFlex="33%" *ngFor="let p of allProjects">
+    <div class="card-col" >
+      <nb-reveal-card style="margin-right: 1rem;">
+
+        <nb-card-front>
+      <nb-card size="meduim"   >
+        <nb-card-header style="background-color: lightblue;">  
+        <div class="row show-grid">
+            <div class="col-md-8">
+                <h5>
+                  <nb-icon icon="briefcase-outline" style="margin-right: 1rem;" ></nb-icon>
+
+                  {{p.name}}</h5>
+            </div>
+            <div class="col-md-1">
+                <nb-icon icon="list-outline" nbTooltip="show more details" nbButton ></nb-icon>
+            </div>
+            <div class="col-md-1">
+               <nb-icon icon="edit-outline" nbTooltip="edit project" (click)="openUpdateUserForm(u.id)" nbButton style="margin-left: 1rem;" ></nb-icon>
+            </div>
+          </div>
+        </nb-card-header>
+        <table class="table ">
+          <th scope="row" style="background-color: blanchedalmond" >
+            <nb-icon icon="npm-outline" style="margin-right: 1rem;"  ></nb-icon>
+            departement</th>
+          <td style="background-color:blanchedalmond;">{{p.Departement}}</td>
+          <tr   >
+            <th scope="row" 
+            > <nb-icon icon="person-outline" style="margin-right:1rem;" ></nb-icon>
+              client</th>
+            <td >{{p.client}} </td>
+          </tr>
+          <tr  style="background-color:blanchedalmond;">
+            <th scope="row"  >
+              <nb-icon icon="layers-outline" style="margin-right: 1rem;" ></nb-icon>
+              Project Manager</th>
+            <td>{{p.projectManager}}
+            </td>
+          </tr>
+          <tr >
+            <th scope="row"  >
+              <nb-icon icon="radio-button-on-outline" style="margin-right: 1rem;" ></nb-icon>
+              status</th>
+            <td>{{p.status}}<nb-icon icon="activity-outline" *ngIf="p.status=='active'" status ="success"style="margin-left: 2rem;"></nb-icon>
+              <nb-icon icon="alert-triangle-outline" *ngIf="p.status=='inactive'" status ="warning" style="margin-left: 2rem;"></nb-icon></td>
+          </tr>
+          <tr style="background-color:blanchedalmond;">
+            <th scope="row"  >
+              <nb-icon icon="clock-outline" style="margin-right: 1rem;" ></nb-icon>
+              duration</th>
+            <td>{{p.duration}} jours</td>
+          </tr>
+        </table>
+          
+      </nb-card>
+      </nb-card-front>
+      <nb-card-back> <nb-card size="meduim">
+
+        <table class="table">
+        <th scope="row">
+          <nb-icon icon="credit-card-outline" style="margin-right: 1rem;" ></nb-icon>
+          budget</th>
+        <td>{{p.budget}}</td>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="arrow-upward-outline" style="margin-right: 1rem;" ></nb-icon>
+            priority</th>
+          <td>{{p.priority}}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="loader-outline" style="margin-right: 1rem;" ></nb-icon>
+            progress</th>
+          <td>{{p.progress}}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="trending-up-outline" style="margin-right: 1rem;" ></nb-icon>
+            score</th>
+          <td>{{p.score}}</td>
+        </tr>
+        <tr>
+
+          <th scope="row">
+            <nb-icon icon="shuffle-outline" style="margin-right: 1rem;" ></nb-icon>
+            variance</th>
+          <td>{{p.variance}}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="bulb-outline" style="margin-right: 1rem;" ></nb-icon>
+            forcast</th>
+          <td>{{p.forcast}}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="arrowhead-down-outline" style="margin-right: 1rem;" ></nb-icon>
+            actual</th>
+          <td>{{p.actual}}</td>
+        </tr>
+      </table>
+
+    </nb-card></nb-card-back>
+
+
+      </nb-reveal-card>
+    </div>
+  </div>
+</div>
+</div>
+</nb-card>
+<nb-card>
+<div *ifPermission='["getAllProjects"]' style="margin-top: 1rem; margin-left: 1rem;">
+  <h3>your projects</h3> 
+<div fxLayout="row wrap" >
+    <div fxFlex="33%" *ngFor="let p of userProjects">
+    <div class="card-col" >
+      <nb-reveal-card style="margin-right: 1rem;">
+        <nb-card-front>
+      <nb-card size="meduim" accent="primary" >
+        <nb-card-header style="background-color: lightblue;">  
+        <div class="row show-grid">
+            <div class="col-md-8">
+                <h5>
+                  <nb-icon icon="briefcase-outline" style="margin-right: 1rem;" ></nb-icon>
+                  {{p.name}}</h5>
+            </div>
+            <div class="col-md-1">
+                <nb-icon icon="list-outline" nbTooltip="show more details" nbButton ></nb-icon>
+            </div>
+            <div class="col-md-1">
+               <nb-icon icon="edit-outline" nbTooltip="edit project" (click)="openUpdateUserForm(u.id)" nbButton style="margin-left: 1rem;" ></nb-icon>
+            </div>
+          </div>
+        </nb-card-header>
+        <table class="table ">
+          <th scope="row">
+            <nb-icon icon="npm-outline" style="margin-right: 1rem;" ></nb-icon>
+            departement</th>
+          <td>back-end</td>
+          <tr>
+            <th scope="row">
+              <nb-icon icon="person-outline" style="margin-right: 1rem;" ></nb-icon>
+              client</th>
+            <td>{{p.client}} </td>
+          </tr>
+          <tr>
+            <th scope="row">
+              <nb-icon icon="layers-outline" style="margin-right: 1rem;" ></nb-icon>
+              Project Manager</th>
+            <td>{{p.projectManager}}</td>
+          </tr>
+          <tr>
+            <th scope="row">
+              <nb-icon icon="radio-button-on-outline" style="margin-right: 1rem;" ></nb-icon>
+              status</th>
+            <td>{{p.status}}</td>
+          </tr>
+          <tr>
+            <th scope="row">
+              <nb-icon icon="clock-outline" style="margin-right: 1rem;" ></nb-icon>
+              duration</th>
+            <td>{{p.duration}} jours</td>
+          </tr>
+        </table>
+          
+      </nb-card>
+      </nb-card-front>
+      <nb-card-back> <nb-card size="meduim" accent="primary">
+
+        <table class="table ">
+        <th scope="row">
+          <nb-icon icon="credit-card-outline" style="margin-right: 1rem;" ></nb-icon>
+          budget</th>
+        <td>{{p.budget}}</td>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="arrow-upward-outline" style="margin-right: 1rem;" ></nb-icon>
+            priority</th>
+          <td>{{p.priority}}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="loader-outline" style="margin-right: 1rem;" ></nb-icon>
+            progress</th>
+          <td>{{p.progress}}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="trending-up-outline" style="margin-right: 1rem;" ></nb-icon>
+            score</th>
+          <td>{{p.score}}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="shuffle-outline" style="margin-right: 1rem;" ></nb-icon>
+            variance</th>
+          <td>{{p.variance}}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="bulb-outline" style="margin-right: 1rem;" ></nb-icon>
+            forcast</th>
+          <td>{{p.forcast}}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="arrowhead-down-outline" style="margin-right: 1rem;" ></nb-icon>
+            actual</th>
+          <td>{{p.actual}}</td>
+        </tr>
+      </table>
+
+    </nb-card></nb-card-back>
+
+
+      </nb-reveal-card>
+    </div>
+  </div>
+</div>
+</div>
+</nb-card>
+<ng-template #addProjectTemplate let-data>
+  <form (ngSubmit)="createNewProject(this.projectData)">
+      <div class="row">
+        <div class="col-sm-12">
+    <label for="inputProjectName" class="label">Project Name</label>
+    <input type="text" nbInput fullWidth id="inputProjectName" name="data.name" placeholder="Project Name" [(ngModel)]="this.projectData.name">
+    </div>
+      </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputDuration" class="label">Duration</label>
+          <input type="number" nbInput fullWidth id="inputDuration" name="data.duration" placeholder="Duration" [(ngModel)]="this.projectData.duration">
+        </div>
+      </div>
+        <div class="col-sm-6"> 
+          <label  class="label">select a project manager</label>
+          <nb-select name="select" placeholder="project manager" style="width:15rem" (selectedChange)="selectManager($event)">  
+          <nb-option *ngFor="let item of data.managers" [value]="item.id">{{item.name}} </nb-option>
+          </nb-select>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputBudget" class="label">Budget</label>
+          <input type="number" nbInput fullWidth id="inputBudget" name="data.budget" placeholder="Budget" [(ngModel)]="this.projectData.budget" >
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputScore" class="label">score</label>
+          <input type="number" nbInput fullWidth id="inputScore" name="data.score" placeholder="score" [(ngModel)]="this.projectData.score" >
+        </div>
+      </div>
+    </div>
+    <div class="row">
+    <div class="col-sm-6">
+      <label for="inputLastName" class="label">Priority</label>
+      <div class="row">
+        <div class="col-sm-4">
+          <nb-checkbox [checked]="data.priority" (checkedChange)="truePrioritytoggle()"> true</nb-checkbox>
+        </div>
+        <div class="col-sm-2">
+          <nb-checkbox (checkedChange)="falsePrioritytoggle()" [checked]="!data.priority"> false</nb-checkbox>
+        </div>
+      </div>
+   </div>
+   <div class="col-sm-4">
+    <label  class="label">select a client for the project</label>
+    <nb-select name="select" placeholder="client" style="width:15rem" (selectedChange)="selectClient($event)">  
+    <nb-option *ngFor="let item of data.clients" [value]="item.id"> {{item.representiveName}} </nb-option>
+    </nb-select>
+  </div>
+  <div class="col-sm-2">
+    <nb-icon icon="plus-outline" nbTooltip="add client" style="margin-top: 2rem; margin-left: 2rem;" ></nb-icon>
+  </div>
+
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <label for="inputDescription" class="label">add a description</label>
+        <input type="text" id="inputDescription" name="data.description" nbInput fullWidth fieldSize="giant" placeholder="description (optional)" [(ngModel)]="data.description">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-10"></div>
+      <div class="=col-sm-2">
+        <button type="submit" status ="primary" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+      </div>
+  </div>
+  </form>
+</ng-template>

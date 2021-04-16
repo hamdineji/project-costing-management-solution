@@ -11,7 +11,6 @@ export interface AuthState {
   export function AuthReducer(state: AuthState = initialState, action: AuthAction) {
     switch (action.type) {
         case AuthActionTypes.SAVE_USER:
-      console.log("action.payload",action.payload)
       return {
         ...state,
         User: action.payload,

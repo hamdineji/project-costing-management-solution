@@ -23,7 +23,6 @@ permission:any ;
   }
 
   LoggedIn(){
-    console.log(localStorage.getItem('token'))
     return ((localStorage.getItem('token') != null) && true)
   }
   getToken(){

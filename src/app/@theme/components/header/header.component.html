@@ -21,8 +21,8 @@
     <nb-action class="user-action" *nbIsGranted="['view', 'user']" >
       <nb-user 
                [onlyPicture]="userPictureOnly"
-               [name]="user?.name"
-               [picture]="user?.picture">
+               [name]="user.name"
+               [picture]="png">
       </nb-user>
       <div class="col-sm-8" > <a (click)="logout()"> <button nbButton  class="btn btn-light" ><i class="fas fa-sign-out-alt"></i> Logout </button></a></div>
     </nb-action>

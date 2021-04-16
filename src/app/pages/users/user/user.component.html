@@ -1,76 +1,117 @@
 <h2 style="text-align: center;">Users management</h2>
 <h4 styyle="margin-top: 1rem ; margin-bottom : 1rem">List of users</h4>
-    <div fxLayout="row wrap" *ifPermission='["getUsers"]'>
-    <div fxFlex="30%" *ngFor="let u of users">
+<nb-card>
+    <div fxLayout="row wrap" *ifPermission='["getUsers"]' style="margin-top: 1rem;margin-left: 1rem;">
+    <div fxFlex="33%" *ngFor="let u of users">
     <div class="card-col">
-      <nb-card size="meduim" accent="primary" >
-        <nb-card-header>  
+      <nb-card size="meduim" >
+        <nb-card-header style="background-color: lightblue;">  
         <div class="row show-grid">
+            <div class="col-md-2">
+              <nb-user 
+              name=""
+              picture="assets/images/{{u.image}}">
+              </nb-user>
+            </div>
             <div class="col-md-8">
-                <h5>{{u.name}}</h5>
+              <h5 style="text-align: center;">{{u.name}}</h5>
             </div>
-            <div class="col-md-1">
-                <nb-icon icon="list-outline"></nb-icon>
-            </div>
-            <div class="col-md-1">
-               <nb-icon icon="edit-outline" (click)="openUpdateUserForm(u.id)" *ifPermission='["modify Users"]' style="margin-left: 1rem;" ></nb-icon>
-            </div>
-          </div>
+            <div class="col-md-2">
+              <nb-icon icon="edit-outline" (click)="openUpdateUserForm(u.id)" *ifPermission='["modify Users"]' nbTooltip="edit user role" ></nb-icon>
+           </div>
+          
+          </div> 
         </nb-card-header>
         <table class="table ">
-          <th scope="row">id</th>
-          <td>{{u.id}}</td>
-          <tr>
-            <th scope="row">departement</th>
-            <td>backen</td>
-          </tr>
-          <tr>
-            <th scope="row">email</th>
+          <th scope="row" style="background-color:blanchedalmond;">
+            <nb-icon icon="npm-outline" style="margin-right: 1rem;"  ></nb-icon>
+            departement</th>
+          <td style="background-color:blanchedalmond;">{{u.departement}}</td>
+          <tr >
+            <th scope="row" >
+              <nb-icon icon="email-outline" style="margin-right: 1rem;"  ></nb-icon>
+              email</th>
             <td>{{u.email}}</td>
           </tr>
-          <tr>
-            <th scope="row">role</th>
+          <tr style="background-color:blanchedalmond;">
+            <th scope="row">
+              <nb-icon icon="award-outline" style="margin-right: 1rem;"  ></nb-icon>
+              role</th>
             <td>{{u.role}}</td>
           </tr>
+          <tr>
+            <th scope="row">
+              <nb-icon icon="briefcase-outline" style="margin-right: 1rem;"  ></nb-icon>
+              projects</th>
+            <td>{{u.projects.length}}</td>
+          </tr>
         </table>
-          
       </nb-card>
     </div>
   </div>
 </div>
+</nb-card>
 <hr>
-<h3>Roles</h3>
+<h2 style="text-align: center;">Roles Management</h2>
+<h4 styyle="margin-top: 1rem ; margin-bottom : 1rem">List of users</h4>
+
+<nb-card style="margin-top: 1rem;">
 <div class="row show-grid">
-        <div class="col-md-9">
+        <div class="col-md-10">
+          <!-- <h4 styyle="margin-top: 1rem ; margin-bottom : 1rem , margin-left 1rem">List of roles</h4> -->
         </div>
         <div class="col-md-2">
-    <button (click)="openAddRoleForm()" status ="primary"  *ifPermission='["addRole"]' nbButton> Add Role</button>
+    <button (click)="openAddRoleForm()" *ifPermission='["addRole"]' nbButton>
+      <nb-icon icon="plus-outline" style="margin-right: 1rem;"  ></nb-icon>
+
+      Add Role</button>
         </div>
 </div>
 <div *ifPermission='["getRoles"]'>
-<div class="content" *ngFor="let Role of rolesData">
-  <div class="row show-grid">
-    <div class="col-md-9">
-      <h5>{{Role.role}}</h5>
-    </div>
-    <div class="col-md-1"><nb-icon icon="edit-outline" style="margin-left: 1rem;" (click)="openUpdateRoleForm(Role.id)"></nb-icon></div>
-    <!-- <div class="col-md-1"><nb-icon icon="trash-2-outline" style="margin-left: 1rem;"></nb-icon></div> -->
-  </div>
-        <div fxLayout="row wrap"> 
-            <div fxFlex="50%">
+  <div fxLayout="row wrap" *ifPermission='["getUsers"]'>
+  <div fxFlex="50%" class="content" *ngFor="let Role of rolesData">
+    <nb-card accent="warning" >
+    <nb-card-header><div class="row ">
+      <div class="col-sm-10">
+        <h5>{{Role.role}}</h5>
+      </div>
+      <div class="col-sm-2"><nb-icon icon="edit-outline" style="margin-left: 1rem;" nbTooltip="edit role permissions" (click)="openUpdateRoleForm(Role.id)"></nb-icon></div>
+      <!-- <div class="col-md-1"><nb-icon icon="trash-2-outline" style="margin-left: 1rem;"></nb-icon></div> -->
+    </div></nb-card-header>
+  <nb-card-body>
+    <div class="row ">
+      <div class="col-sm-6" *ngIf="Role.rolesManagementPermissions.length != 0">
               <h6>roles Management</h6>
               <div *ngFor="let permission of Role.rolesManagementPermissions"><nb-checkbox checked>{{permission}}</nb-checkbox>
               </div>
             </div>
-         <div fxLayout="row wrap">
-            <div fxFlex="100%">
+              <div class="col-sm-4" *ngIf="Role.usersManagementPermissions.length != 0">
         <h6>users Management </h6> 
         <div *ngFor="let permission of Role.usersManagementPermissions"> <nb-checkbox checked>{{permission}}</nb-checkbox>
-        </div> 
   </div>
          </div>
+    </div>
+         <div class="row ">
+          <div class="col-sm-6" *ngIf="Role.DepartementManagementPermissions.length != 0">
+                  <h6>Departement Management</h6>
+                  <div *ngFor="let permission of Role.DepartementManagementPermissions"><nb-checkbox checked>{{permission}}</nb-checkbox>
+                  </div>
+                </div>
+                <div class="col-sm-4" *ngIf="Role.projectManagementPermissions.length != 0">
+                  <h6>project Management </h6> 
+                  <div *ngFor="let permission of Role.projectManagementPermissions"> <nb-checkbox checked>{{permission}}</nb-checkbox>
+            </div>
+        </div>
+         </div>
+
+      </nb-card-body>
+ </nb-card>
+  </div>
+  </div>
+</div>
+</nb-card>
 <ng-template #updateRoleTemplate let-data>
-  <div style="width: 35rem;">
+  <div style="width: 40rem;">
   <form (ngSubmit)="updateRole(data.id)">
     <div class="mb-3">
     <label for="RoleName" class="form-label">Role name</label>
@@ -80,35 +121,47 @@
     <label for="exampleFormControlTextarea1" class="form-label">permissions</label>
     <div fxLayout="row wrap"  > 
       <div fxFlex="50%" >
-        <label>Users Permissions</label>
+        <label>Usersvvvv Permissions</label>
         <div *ngFor="let p of categoryUserPermissions">
-        <nb-checkbox (checkedChange)="toggleUpdateRoleForm($event,p.id)" [checked]="p.checked" >{{p.permission.name}}</nb-checkbox>
+        <nb-checkbox (checkedChange)="toggleUpdateRoleForm($event,p.permission.id)" [checked]="p.checked" >{{p.permission.name}}</nb-checkbox>
         </div>
         </div>
         <div fxFlex="50%" >
         <label>Roles Permissions</label>
         <div *ngFor="let p of categoryRolePermissions">
-        <nb-checkbox (checkedChange)="toggleUpdateRoleForm($event,p.id)" [checked]="p.checked" >{{p.permission.name}}</nb-checkbox>
+        <nb-checkbox (checkedChange)="toggleUpdateRoleForm($event,p.permission.id)" [checked]="p.checked" >{{p.permission.name}}</nb-checkbox>
         </div>
         </div>
-        </div>    
+        </div>   
+        <div fxLayout="row wrap"  >
+          <div fxFlex="50%" >
+            <label>Project Permissions</label>
+        <div *ngFor="let p of categoryProjectPermissions">
+        <nb-checkbox (checkedChange)="toggleUpdateRoleForm($event,p.permission.id)" [checked]="p.checked" >{{p.permission.name}}</nb-checkbox>
+        </div>
+            </div>
+          <div fxFlex="50%" >
+            <label>Departement Permissions</label>
+        <div *ngFor="let p of categoryDepPermissions">
+        <nb-checkbox (checkedChange)="toggleUpdateRoleForm($event,p.permission.id)" [checked]="p.checked" >{{p.permission.name}}</nb-checkbox>
+        </div>
+       
+       
+          </div>
+           </div> 
     </div>
     <button type="submit" status ="primary" nbButton>SUBMIT</button>
     </form>
     </div>
 </ng-template>
 <ng-template #updateUserTemplate let-data>
+  <div style="width: 35rem;">
   <form (ngSubmit)="updateUser(data.id)">
     <div class="mb-3">
-    <label for="RoleName" class="form-label">User name</label>
-    <input type="text" class="form-control" id="RoleName" name="RoleName" value="data.userName" [(ngModel)]="data.userName">
-    </div>
-    <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label">permissions</label>
-        
-    <div *ngFor="let p of data.data">
-      <div class="row wrap"  > 
-        <div fxFlex="10%" >
+        <h6> Roles</h6>
+        <div fxLayout="row wrap"> 
+          <div fxFlex="33%" *ngFor="let p of data.data">
+    <div style="margin-left: 1rem ;">
     <nb-checkbox (checkedChange)="toggle($event,p.role.id)" [checked]="p.checked" >{{p.role.name}}</nb-checkbox>
     </div>
         </div>
@@ -116,6 +169,7 @@
     </div>
     <button type="submit" status ="primary" nbButton>SUBMIT</button>
   </form>
+</div>
 </ng-template>
 <ng-template #addRoleTemplate let-data>
   <div style="width: 35rem;">
@@ -124,7 +178,6 @@
   <h6>Role name</h6>
   <input type="text" class="form-control" id="RoleName" name="RoleName" placeholder="enter the role name" [(ngModel)]="roleName">
   </div>
- 
   <h6>permissions</h6>
   <div fxLayout="row wrap"> 
             <div fxFlex="50%" >
@@ -140,7 +193,6 @@
   </div>
   </div>
   </div>
-  
   <button type="submit" status ="primary" nbButton >SUBMIT</button>
   </form>
 </div>

@@ -36,7 +36,7 @@ currentUser : User ;
            localStorage.setItem('token', res.data.login)
            this._router.navigate(['/pages/dashboard' ])
            this.store.dispatch(new SaveUserAction(this._auth.getUser(res.data.login)))
-           this.store.select((state)=>state).subscribe((data)=>console.log("store",data));
+           this.store.select((state)=>state).subscribe();
            
         }, 
         err => {

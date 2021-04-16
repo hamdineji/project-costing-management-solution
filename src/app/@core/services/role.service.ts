@@ -21,6 +21,15 @@ query
   }
 }
 `
+const getRolesByPermission = gql `
+query 
+getRolesByPermission($id : ID){
+  getRolesByPermission(id : $id){
+    id
+  }
+}
+`
+
 const createRole = gql `
 mutation 
   createRole($name : String , $permission : [ID]  ){
@@ -53,6 +62,12 @@ getRoles(){
 getRoleByID(id){
   return  this.apollo.query({
       query :  GetRoleById ,
+      variables : {id}
+    })
+}
+getRolesByPermission(id){
+  return  this.apollo.query({
+      query :  getRolesByPermission ,
       variables : {id}
     })
 }

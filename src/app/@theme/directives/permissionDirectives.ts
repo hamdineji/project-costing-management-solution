@@ -22,7 +22,6 @@ export class IfPermissionDirective implements OnInit {
   constructor(
     private viewContainerRef: ViewContainerRef,
     private templateRef: TemplateRef<any>,
-    private roleService: RoleService,
     private permissionService : PermissionService,
     private store : Store<AppState>
   ) {}
@@ -32,10 +31,7 @@ export class IfPermissionDirective implements OnInit {
         this.store.select(currentUserSelector).subscribe((data : any)=>{
 
          let permissions=data.permissions ;
-         console.log("permisssssion",permissions)
           permissions.forEach(val => {this.permissionService.getPermissionById(val).subscribe((data:any)=>{
-            console.log("data.name",data.data.getPermissionById.name);
-            console.log(this.ifPermission[0])
             if(data.data.getPermissionById.name===this.ifPermission[0]){
 
               this.viewContainerRef.createEmbeddedView(this.templateRef);
