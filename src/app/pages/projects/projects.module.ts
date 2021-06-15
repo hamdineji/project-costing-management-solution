@@ -5,12 +5,12 @@ import { ProjectsRoutingModule } from './projects-routing.module';
 import { ProjectComponent } from './project/project.component';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {NbButtonModule, NbCardModule,   NbCheckboxModule,   NbIconModule, NbInputModule, NbListModule, NbSelectModule, NbTooltipModule,} from '@nebular/theme'
-import { FormsModule } from '@angular/forms';
-
+import {NbButtonModule, NbCardModule,   NbCheckboxModule,   NbDatepickerModule,   NbIconModule, NbInputModule, NbListModule, NbPopoverModule, NbProgressBarModule, NbSelectModule, NbSidebarModule, NbTabsetModule, NbTooltipModule, NbUserModule,} from '@nebular/theme'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {ProjectDetailsComponent}from './project-details/projectDetails.component'
 @NgModule({
-  declarations: [ProjectComponent],
-  imports: [
+  declarations: [ProjectComponent , ProjectDetailsComponent],
+  imports: [ReactiveFormsModule,
     CommonModule,
     ProjectsRoutingModule , 
     FlexLayoutModule,
@@ -23,7 +23,13 @@ import { FormsModule } from '@angular/forms';
     NbInputModule,
     NbSelectModule,
     NbCheckboxModule,
-    FormsModule
+    FormsModule,
+    NbUserModule,
+    NbPopoverModule,
+    NbDatepickerModule ,
+    NbProgressBarModule,
+    NbTabsetModule,
+    NbSidebarModule
   ]
 })
 export class ProjectsModule { }

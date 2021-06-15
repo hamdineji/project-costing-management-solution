@@ -1,37 +1,220 @@
-<h2 style="text-align: center;">Project Details</h2>
-<nb-card>
-    <div class="row">  
-    <div class="col-sm-3">
-<nb-card>
-<nb-card-header>
-    <h6>initialisation</h6>
-</nb-card-header> 
-</nb-card>
-</div> 
-<div class="col-sm-3">
-<nb-card>
+
+<nb-card *ifPermission='["getAllTasks"]'>
     <nb-card-header>
-        <h6>planification</h6>
-    </nb-card-header> 
-</nb-card>
+        <div class="row">
+            <div class="col-sm-5">
+                list of tasks
+            </div>
+            <div class="col-sm-3">
+                <nb-select name="select" placeholder="select Task by User" style="width:15rem" size="small" (selectedChange)="selectUserFilter($event)">
+                    <nb-option  [value]="0">All Tasks </nb-option>
+                    <nb-option *ngFor="let item of allUsers" [value]="item.id">{{item.name}} </nb-option>
+                </nb-select>
+              </div>
+            <div class="col-sm-3">
+                <nb-select name="select" placeholder="select Task by Project" style="width:15rem" size="small" (selectedChange)="selectProjectFilter($event)">
+                    <nb-option  [value]="0">All Tasks </nb-option>
+                    <nb-option *ngFor="let item of allProjects" [value]="item.id">{{item.name}} </nb-option>
+                </nb-select>
+              </div>
+        </div>
+    </nb-card-header>
+    <nb-card-header >
+        <div style="max-height: 60vh; overflow-y: scroll">
+        <nb-card *ngFor="let item of allTasks" >
+             <nb-card-header style="background-color: lightblue;">
+                 <div class="row">
+                 <div class="col-sm-2">
+                    {{item.project.name}}
+                </div>
+                 <div class="col-sm-3" *ngIf="item.description.length>30">
+                     <p>{{item.description.substr(0,30)}}...</p>
+                 </div>
+                 <div class="col-sm-3" *ngIf="!(item.description.length>30)">
+                    <p>{{item.description}}</p>
+                </div>
+                <div class="col-sm-1">
+                    {{item.status}} 
+                </div>
+                <div class="col-sm-1">
+                    <nb-icon icon="bulb-outline" *ngIf="item.status=='new'" style="color: crimson;"></nb-icon>
+                    <nb-icon icon="activity-outline" *ngIf="item.status=='in progress'" style="color: mediumseagreen;"></nb-icon>
+                    <nb-icon icon="checkmark-outline" *ngIf="item.status=='done'" style="color: darkblue;"></nb-icon>
+                </div>
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            start
+                        </div>
+                        <div class="col-sm-8" style="margin-top: 0.15rem;">
+                            <p>{{getDate(item.startDate)}}</p>
+                        </div>
+                    </div>    
+                </div>
+                <div class="col-sm-2">
+                    <div class="row">
+                      <div class="col-sm-2">end </div>
+                        <div class="col-sm-8" style="margin-top: 0.15rem;"><p> {{getDate(item.endDate)}}</p></div>  
+                    </div>
+                </div>
+                <div class ="col-sm-1">
+                    <nb-icon icon="arrow-forward-outline" nbTooltip="update task status" (click)="setTaskStatus(item)"> </nb-icon>
+                    <nb-icon icon="more-horizontal-outline" nbTooltip="change request" style="margin-left: 1rem;" (click)="showTaskDetails(item)" [nbPopover]="popoverTaskTemplate" > </nb-icon>
+                </div>
+                </div>
+             </nb-card-header>
+        </nb-card>
+    </div>
+
+    </nb-card-header>
+</nb-card>   
+<nb-card *ifDepartementPermission='["getAllTasks"]'>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-sm-6">
+                list of tasks
+            </div>
+            <div class="col-sm-3">
+                <nb-select name="select" placeholder="select Task by Project" style="width:15rem" size="small" (selectedChange)="selectUserProjectFilter($event)">
+                    <nb-option  [value]="0">All Tasks </nb-option>
+                    <nb-option *ngFor="let item of userProjects" [value]="item.id">{{item.name}} </nb-option>
+                </nb-select>
+              </div>
+        </div>
+    </nb-card-header>
+    <nb-card-header>
+        <div style="max-height: 100vh; overflow-y: scroll">
+            <div *ngIf="tasks.length==0" style="text-align: center;"  >
+                No Tasks Founded for this project
+            </div>
+        <nb-card *ngFor="let item of tasks" >
+             <nb-card-header style="background-color: lightblue;">
+                 <div class="row">
+                 <div class="col-sm-2">
+                    {{item.project.name}}
+                </div>
+                 <div class="col-sm-3" *ngIf="item.description.length>30">
+                     <p>{{item.description.substr(0,30)}}...</p>
+                 </div>
+                 <div class="col-sm-3" *ngIf="!(item.description.length>30)">
+                    <p>{{item.description}}</p>
+                </div>
+                <div class="col-sm-1">
+                    {{item.status}} 
+                </div>
+                <div class="col-sm-1">
+                    <nb-icon icon="bulb-outline" *ngIf="item.status=='new'" style="color: crimson;"></nb-icon>
+                    <nb-icon icon="activity-outline" *ngIf="item.status=='in progress'" style="color: mediumseagreen;"></nb-icon>
+                    <nb-icon icon="checkmark-outline" *ngIf="item.status=='done'" style="color: darkblue;"></nb-icon>
+                </div>
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            start
+                        </div>
+                        <div class="col-sm-8" style="margin-top: 0.15rem;">
+                            <p>{{getDate(item.startDate)}}</p>
+                        </div>
+                    </div>    
+                </div>
+                <div class="col-sm-2">
+                    <div class="row">
+                      <div class="col-sm-2">end </div>
+                        <div class="col-sm-8" style="margin-top: 0.15rem;"><p> {{getDate(item.endDate)}}</p></div>  
+                    </div>
+                </div>
+                <div class ="col-sm-1">
+                    <nb-icon icon="arrow-forward-outline" nbTooltip="update task status" (click)="setTaskStatus(item)"> </nb-icon>
+                    <nb-icon icon="more-horizontal-outline" nbTooltip="change request" style="margin-left: 1rem;" (click)="showTaskDetails(item)" [nbPopover]="popoverTaskTemplate" > </nb-icon>
+                </div>
+                </div>
+             </nb-card-header>
+        </nb-card>
+    </div>
+    </nb-card-header>
+</nb-card> 
+<div class="row">
+<div class="col-sm-4">
+
+    <nb-card class="Listclass " size="medium">
+        <nb-card-header>
+            Todo List
+          </nb-card-header>
+        <nb-list>
+            <nb-list-item *ngFor="let item of allTasks">
+              <div class="row">
+                  <div class="col-sm-4">
+                    {{ item.project.name }} 
+                  </div>
+                  <div class="col-sm-5">
+                      {{item.endDate}}
+                  </div>
+                  <div class="col-sm-2">
+                    {{item.status}}
+                  </div>
+
+              </div>
+              
+                
+            </nb-list-item>
+        </nb-list>
+    </nb-card>
 </div>
-<div class="col-sm-3">
-<nb-card>
-    <nb-card-header>
-        <h6>developpement</h6>
-    </nb-card-header> 
-</nb-card>
 </div>
-<div class="col-sm-3">
-<nb-card>
-    <nb-card-header>
-        <h6>deploiement</h6>
-    </nb-card-header> 
-    <table>
-        <th>status</th>
-        <td>in progress</td>
+
+
+
+
+
+<ng-template #popoverTaskTemplate >
+
+    <nb-card>
+        <nb-card-header style="background-color: bisque;">
+            <div class="row">
+                Task Details
+            </div>
+        </nb-card-header>
+    <table class="table">
+    <tr>
+        <th>
+            description
+        </th>
+        <td>
+            {{taskDetails.description}}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            status
+        </th>
+        <td>
+            {{taskDetails.status}}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            dateRaised
+        </th>
+        <td>
+            {{getDate(taskDetails.dateRaised)}}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            start date
+        </th>
+        <td>
+            {{getDate(taskDetails.startDate)}}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            end date
+        </th>
+        <td>
+            {{getDate(taskDetails.endDate)}}
+        </td>
+    </tr>
     </table>
-</nb-card>
-</div>
-</div>
-</nb-card>
+    </nb-card>
+</ng-template>

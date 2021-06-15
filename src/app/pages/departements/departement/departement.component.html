@@ -1,22 +1,19 @@
 <h2 style="text-align: center; margin-bottom : 3rem">Proxym's Departements</h2>
-<nb-card>
+<nb-card *ifPermission='["getDepartements"]'>
 <div fxLayout="row wrap" style="margin-top: 1rem;margin-left: 1rem;">
     <div fxFlex="33%" *ngFor="let p of departements">
     <div class="card-col" >
       <nb-card size="meduim" style="margin-right: 1rem;" >
         <nb-card-header style="background-color: darkgray;">  
         <div class="row show-grid" >
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <h5>
                   <nb-icon icon="npm-outline" style="margin-right: 1rem;" ></nb-icon>
                   {{p.data.name}}</h5>
-             
             </div>
+            
             <div class="col-md-1">
-                <nb-icon icon="list-outline" nbTooltip="show more details" ></nb-icon>
-            </div>
-            <div class="col-md-1">
-               <nb-icon icon="edit-outline" nbTooltip="edit departement"  style="margin-left: 1rem;" ></nb-icon>
+              <nb-icon icon="briefcase-outline" nbTooltip="see projects" [routerLink]="['../../projects/project']" nbButton (click)="showProjects(p.data.id)"  ></nb-icon>
             </div>
           </div>
         </nb-card-header>
@@ -25,35 +22,51 @@
               <nb-icon icon="person-outline" style="margin-right: 1rem;"  ></nb-icon>
               head Of Departements</th>
             <td>{{p.data.headOfDep}}</td>
-            <tr >
-          <th scope="row"  >
-            <nb-icon icon="checkmark-outline" style="margin-right: 1rem;"  ></nb-icon>
-            doneProjects</th>
-          <td>{{p.data.doneProjects[0]}}</td>
-        </tr>
           <tr>
             <th scope="row" >
               <nb-icon icon="sync-outline" style="margin-right: 1rem;"  ></nb-icon>
               CR approvers</th>
-            <td *ngFor="let item of p.CR">{{item}} </td>
+            <td class="row">
+              <div class="col-sm-8">
+                <div *ngFor="let item of p.data.CRapprovers">
+                  {{item.name}}
+                </div>
+              </div>
+              <div class="col-sm-1">
+                <nb-icon icon="edit-outline" nbTooltip="edit CR approvers" nbButton (click)="openModifyCRs(p.data)" ></nb-icon>
+              </div>
+            </td>
           </tr>
           <tr>
-            <th scope="row" >
+            <th scope="row">
               <nb-icon icon="paper-plane-outline" style="margin-right: 1rem;"  ></nb-icon>
               DR approvers</th>
-            <td>{{p.DR[0]}}</td>
+            <td class="row ">
+              <div class="col-sm-8">
+              <div *ngFor="let dr of p.data.DRapprovers" >
+                {{dr.name}}
+              </div>
+            </div>
+              <div class="col-sm-1">
+                <nb-icon icon="edit-outline" nbTooltip="edit DR approvers" nbButton (click)="openModifyDRs(p.data)" ></nb-icon>
+              </div>
+              </td>
           </tr>
           <tr>
             <th scope="row" >
               <nb-icon icon="briefcase-outline" style="margin-right: 1rem;"  ></nb-icon>
-
-              projects In Progression</th>
-            <td>{{p.data.projectsInProgression[0]}}</td>
+              score</th>
+            <td>{{p.score}}</td>
+          </tr>
+          <tr>
+            <th scope="row" >
+              <nb-icon icon="briefcase-outline" style="margin-right: 1rem;"  ></nb-icon>
+              progress</th>
+            <td>{{p.progress}}</td>
           </tr>
           <tr>
             <th scope="row" >
               <nb-icon icon="people-outline" style="margin-right: 1rem;"  ></nb-icon>
-
               number of Users </th>
             <td>{{p.data.users[0]}}</td>
           </tr>
@@ -63,3 +76,98 @@
     </div>
 </div>
 </nb-card>
+<nb-card *ifDepartementPermission='["getDepartements"]'>
+  <div fxLayout="row wrap" style="margin-top: 1rem;margin-left: 1rem;">
+      <div fxFlex="33%" *ngFor="let p of userDepartements">
+      <div class="card-col" >
+        <nb-card size="meduim" style="margin-right: 1rem;" >
+          <nb-card-header style="background-color: darkgray;">  
+          <div class="row show-grid" >
+              <div class="col-md-10">
+                  <h5>
+                    <nb-icon icon="npm-outline" style="margin-right: 1rem;" ></nb-icon>
+                    {{p.data.name}}</h5>
+              </div>
+              <div class="col-md-2">
+                <nb-icon icon="edit-outline" nbTooltip="edit departement" nbButton (click)="openModifyDRs(p.data)" ></nb-icon>
+              </div>
+            </div>
+          </nb-card-header>
+          <table class="table ">
+              <th scope="row" >
+                <nb-icon icon="person-outline" style="margin-right: 1rem;"  ></nb-icon>
+                head Of Departements</th>
+              <td>{{p.data.headOfDep}}</td>
+            <tr>
+              <th scope="row" >
+                <nb-icon icon="sync-outline" style="margin-right: 1rem;"  ></nb-icon>
+                CR approvers</th>
+              <td >
+                <div *ngFor="let item of p.data.CRapprovers">
+                  {{item.name}}
+                </div>
+                 </td>
+            </tr>
+            <tr>
+              <th scope="row" >
+                <nb-icon icon="paper-plane-outline" style="margin-right: 1rem;"  ></nb-icon>
+                DR approvers</th>
+              <td>
+                <div *ngFor="let dr of p.data.DRapprovers">
+                  {{dr.name}}
+                </div>
+                </td>
+            </tr>
+            <tr>
+              <th scope="row" >
+                <nb-icon icon="briefcase-outline" style="margin-right: 1rem;"  ></nb-icon>
+                score</th>
+              <td>{{p.score}}</td>
+            </tr>
+            <tr>
+              <th scope="row" >
+                <nb-icon icon="briefcase-outline" style="margin-right: 1rem;"  ></nb-icon>
+                progress</th>
+              <td>{{p.progress}}</td>
+            </tr>
+            <tr>
+              <th scope="row" >
+                <nb-icon icon="people-outline" style="margin-right: 1rem;"  ></nb-icon>
+                number of Users </th>
+              <td>{{p.data.users[0]}}</td>
+            </tr>
+          </table>
+        </nb-card>
+      </div>
+      </div>
+  </div>
+  </nb-card>
+<ng-template #modifyCRsandDRs let-data>
+  <div style="width: 35rem;">
+<form >
+  <div class="mb-3">
+    <label>Users</label>
+  <div fxLayout="row wrap"> 
+            <div fxFlex="50%" *ngFor="let user of data.users">
+  <nb-checkbox (click)="addCRapprover(data.dep.id, user.user.id)" [checked]="user.checked"> {{user.user.name}}</nb-checkbox>
+  </div>
+  </div>
+  </div>
+  </form>
+</div>
+</ng-template>
+<ng-template #modifyDRs let-data>
+  <div style="width: 35rem;">
+<form >
+
+  <div class="mb-3">
+    <label>Users</label>
+  <div fxLayout="row wrap"> 
+            <div fxFlex="50%" *ngFor="let user of data.users">
+  <nb-checkbox (click)="addDRapprover(data.dep.id, user.user.id)" [checked]="user.checked"> {{user.user.name}}</nb-checkbox>
+  </div>
+  </div>
+  </div>
+  </form>
+</div>
+</ng-template>

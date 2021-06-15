@@ -4,6 +4,8 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
 import { Component, OnInit } from '@angular/core';
+import { NotificationService } from './@core/services/notification.service';
+import { ProjectService } from './@core/services/projects.service';
 import { AnalyticsService } from './@core/utils/analytics.service';
 import { SeoService } from './@core/utils/seo.service';
 
@@ -13,7 +15,7 @@ import { SeoService } from './@core/utils/seo.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private analytics: AnalyticsService, private seoService: SeoService) {
+  constructor(private analytics: AnalyticsService, private seoService: SeoService ) {
   }
 
   ngOnInit(): void {

@@ -13,7 +13,7 @@
 @import '~bootstrap/scss/grid';
 
 // loading progress bar theme
-@import './pace.theme';
+// @import './pace.theme';
 
 @import './layout';
 @import './overrides';
@@ -27,7 +27,7 @@
 
   @include ngx-layout();
   // loading progress bar
-  @include ngx-pace-theme();
+  // @include ngx-pace-theme();
 
   @include nb-overrides();
 };

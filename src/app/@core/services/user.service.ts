@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
-import { Permission } from "../models/permission";
 import gql from 'graphql-tag';
 
 const getUsers = gql `
@@ -8,11 +7,27 @@ query {
     getUsers{
     id
     name
-    role 
+    role {name}
     email
-    projects 
+    projects{
+        id
+        name 
+    progress} 
     image
-    departement
+    absences
+    salary 
+    tasks{
+        startDate
+        endDate
+    }
+    vacation{
+        startDate 
+        endDate
+    }
+    availabilityDate
+    departement{
+        name
+    }
   }
 }
 `
@@ -22,31 +37,87 @@ getUserById ($id : ID ){
     getUserById(id : $id){
     id
     name
-    role 
     email 
-    projects
-    departement
+    projects{id name}
+    image
+   
+    
   }
 }
 `
+const getApprover = gql `
+query 
+getApprover ($role : ID , $departement : ID ){
+    getApprover(role : $role , departement :$departement){
+    id
+    name
+    email 
+    
+  }
+}
+`
+
 const getUsersByRole = gql `
 query 
 getUsersByRole ($id : ID ){
     getUsersByRole(id : $id){
     id
     name
-    departement
+    departement{
+        id
+        name
+    }
   }
+}
+`
+const sendMail=  gql `
+mutation 
+sendMail($to : String,$data : String  , $object : String ){
+    sendMail(to : $to , data : $data ,object : $object ) 
+}
+`
+const getUserProjects = gql `
+query
+getUserWithProjects($id : ID ){
+    getUserWithProjects(id : $id ){
+        projects { 
+            id
+            name
+            projectManager{name} 
+            departements{name} 
+            client{representiveName}
+            forcast 
+            status 
+            progress 
+            priority 
+            score 
+            budget 
+            baselineDate
+        }
+    }
 }
 `
 
 const updateRole = gql `
 mutation 
-addRole($role : ID , $userID : ID ){
-    addRole(role : $role , userID : $userID) {
-        name
-        role
-    }
+addRole($role : RoleInput , $userID : ID ){
+    addRole(role : $role , userID : $userID) 
+}
+`
+const addAbsence = gql `
+mutation 
+addAbsence($user: ID ,$absence : DateTime){
+    addAbsence(user: $user , absence : $absence){
+    name
+  }
+}
+`
+const assignProject = gql `
+mutation 
+assignProject($projectid: ID ,$userid : ID){
+    assignProject(projectid: $projectid , userid : $userid){
+    name
+  }
 }
 `
 
@@ -61,6 +132,12 @@ getUsers(){
         query : getUsers 
       })
 }
+getApprover(role,departement){
+    return  this.apollo.query({
+        query : getApprover,
+        variables:{role,departement} 
+      })
+}
 getUserById(id){
     return this.apollo.query({
         query : getUserById ,
@@ -73,6 +150,12 @@ getUsersByRole(id){
         variables : { id}
     })
 }
+getUserProjects(id){
+    return this.apollo.query({
+        query : getUserProjects ,
+        variables : {id}
+    })
+}
 addRole(role , userID){
     return this.apollo.mutate({
         mutation: updateRole ,
@@ -81,5 +164,23 @@ addRole(role , userID){
         }
     })
 }
+addAbsence(user, absence){
+    return  this.apollo.mutate({
+        mutation :  addAbsence , 
+        variables:{user, absence}
+      })
+  }
+  assignProject(projectid , userid){
+    return this.apollo.mutate({
+        mutation : assignProject, 
+        variables : {projectid, userid}
+    })
+  }
+  sendMail(to , data , object){
+      return this.apollo.mutate({
+          mutation : sendMail ,
+          variables : {to , data , object}
+      })
+  }
 
 }

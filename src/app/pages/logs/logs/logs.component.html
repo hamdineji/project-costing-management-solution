@@ -1,1 +1,26 @@
-<p>logs works!</p>
+<h6>List of Logs</h6>
+<nb-card>
+<div *ngFor="let log of logsList">
+<nb-card style="margin-top: 1rem; margin-left: 1rem;margin-right: 1rem; background-color: #fbc6a4;" >
+    <nb-card-header >
+        <div class="row">
+            <div class="col-sm-2">
+                <nb-icon icon="recording-outline"></nb-icon>
+            </div>
+            <div>
+                description : 
+            </div>
+            <div class="col-sm-6">
+                {{log.description}}
+            </div>
+            <div>
+                time : 
+            </div>
+            <div class="col-sm-2">
+                {{getDate(log.createdAt)}}
+            </div>
+        </div>
+    </nb-card-header>
+</nb-card>
+</div>
+</nb-card>

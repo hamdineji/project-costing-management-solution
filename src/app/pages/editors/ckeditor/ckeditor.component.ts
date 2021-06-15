@@ -11,10 +11,17 @@ import 'ckeditor';
         CKEditor
       </nb-card-header>
       <nb-card-body>
-        <ckeditor [config]="{ extraPlugins: 'divarea', height: '320' }"></ckeditor>
+      
+        <ckeditor [(ngModel)]="model" [config]="{ extraPlugins: 'divarea', height: '320' }"></ckeditor>
       </nb-card-body>
+      <button (click)="afficher()">afficher</button>
     </nb-card>
   `,
 })
 export class CKEditorComponent {
+model=""
+
+afficher(){
+  console.log("modeeel", this.model)
+}
 }

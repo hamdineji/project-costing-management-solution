@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NbCardModule } from '@nebular/theme';
 import { CKEditorModule } from 'ng2-ckeditor';
 
@@ -12,6 +13,7 @@ import { EditorsRoutingModule, routedComponents } from './editors-routing.module
     ThemeModule,
     EditorsRoutingModule,
     CKEditorModule,
+    FormsModule
   ],
   declarations: [
     ...routedComponents,

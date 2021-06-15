@@ -1,1 +1,21 @@
-<p>notification works!</p>
+<h2>notifications </h2>
+<nb-card>
+    <div *ngFor="let notif of allNotification" style="margin-left: 0.5rem;margin-top: 1rem;">
+        <nb-card>
+        <nb-card-body>
+        <div class="row">
+            <nb-user class="col-md-4"
+            picture="assets/images/{{notif.createdby.image}}"
+            name="{{notif.createdby.name}}">
+            </nb-user>
+            <div class="col-sm-2">
+                {{notif.description}}
+            </div>
+            <div class="col-sm-2">
+                {{getDate(notif.createdAt)}}
+            </div>
+        </div>
+    </nb-card-body>
+    </nb-card>
+    </div>
+</nb-card>

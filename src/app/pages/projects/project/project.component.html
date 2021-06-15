@@ -1,132 +1,131 @@
 <h2 style="text-align: center; margin-bottom : 3rem">Project List</h2>
-<nb-card>
+<nb-card *ifPermission='["getAllProjects"]'>
 <div class="row show-grid" style="margin-top: 1rem; ">
-  <div class="col-md-9" style="margin-left: 2rem;">
+  <div class="col-md-6" style="margin-left: 2rem;">
     <h3>all proxym's projects</h3> 
+
+  </div>
+  <div class="col-sm-3">
+    <nb-select name="select" placeholder="select Project Filter" style="width:15rem" size="small" (selectedChange)="selectDepartementFilter($event)">
+    <nb-option  [value]="5">Show all</nb-option>
+    <nb-option  [value]="6">My Projects </nb-option>
+    <nb-option  [value]="1">Backend Projects </nb-option>
+    <nb-option  [value]="2">Frontend Projects </nb-option>
+    <nb-option  [value]="3">Mobile Projects </nb-option>
+    <nb-option  [value]="4">Bankerise Projects </nb-option>
+    </nb-select>
   </div>
   <div class="col-md-2">
-<button (click)="openAddProjectForm()"  *ifPermission='["addProject"]' nbButton> 
-  <nb-icon icon="plus-outline"  ></nb-icon>
+    <button (click)="collapse()">cccc</button>
+    <button (click)="noncollapse()">cccc</button>
+
+
+<button (click)="openAddProjectForm()" size="small" nbButton> 
+  <nb-icon icon="plus-outline"></nb-icon>
   Add Project</button>
   </div>
 </div>
-<div *ifPermission='["getAllProjects"]'>
-
+<div>
 <div fxLayout="row wrap" style="margin-left: 2rem;">
     <div fxFlex="33%" *ngFor="let p of allProjects">
-    <div class="card-col" >
+    <div class="card-col">
       <nb-reveal-card style="margin-right: 1rem;">
-
         <nb-card-front>
-      <nb-card size="meduim"   >
-        <nb-card-header style="background-color: lightblue;">  
+      <nb-card size="meduim">
+        <nb-card-header style="background-color: #28b5b5;">  
         <div class="row show-grid">
             <div class="col-md-8">
                 <h5>
                   <nb-icon icon="briefcase-outline" style="margin-right: 1rem;" ></nb-icon>
-
                   {{p.name}}</h5>
             </div>
             <div class="col-md-1">
-                <nb-icon icon="list-outline" nbTooltip="show more details" nbButton ></nb-icon>
+                <nb-icon icon="list-outline" (click)="openProjectDetails(p.id)" [routerLink]="['../project-details']" routerLinkActive="router-link-active"  nbTooltip="show more details" nbButton ></nb-icon>
             </div>
             <div class="col-md-1">
-               <nb-icon icon="edit-outline" nbTooltip="edit project" (click)="openUpdateUserForm(u.id)" nbButton style="margin-left: 1rem;" ></nb-icon>
+               <nb-icon icon="arrowhead-right-outline" nbTooltip="start project" (click)="startProject(p.id)" *ngIf="p.status=='inactive'" nbButton  ></nb-icon>
             </div>
+            <div class="col-md-1" >
+            <nb-icon icon="bulb-outline" nbButton nbTooltip="change priority" (click)="changePriority(p.id)" *ngIf="p.priority" style="margin-left: 1rem; color: coral;"></nb-icon>
+            <nb-icon icon="bulb-outline" nbTooltip="change priority" (click)="changePriority(p.id)"  *ngIf="!p.priority" nbButton style="margin-left: 1rem;"></nb-icon> 
+          </div>
           </div>
         </nb-card-header>
         <table class="table ">
-          <th scope="row" style="background-color: blanchedalmond" >
+          <th scope="row" >
             <nb-icon icon="npm-outline" style="margin-right: 1rem;"  ></nb-icon>
             departement</th>
-          <td style="background-color:blanchedalmond;">{{p.Departement}}</td>
+          <td >{{p.departements[0].name}}</td>
           <tr   >
-            <th scope="row" 
-            > <nb-icon icon="person-outline" style="margin-right:1rem;" ></nb-icon>
+            <th scope="row"> <nb-icon icon="person-outline" style="margin-right:1rem;" ></nb-icon>
               client</th>
-            <td >{{p.client}} </td>
+            <td >{{p.client.representiveName}} </td>
           </tr>
-          <tr  style="background-color:blanchedalmond;">
-            <th scope="row"  >
+          <tr>
+            <th scope="row">
               <nb-icon icon="layers-outline" style="margin-right: 1rem;" ></nb-icon>
               Project Manager</th>
-            <td>{{p.projectManager}}
+            <td>{{p.projectManager.name}}
             </td>
           </tr>
-          <tr >
-            <th scope="row"  >
+          <tr>
+            <th scope="row">
               <nb-icon icon="radio-button-on-outline" style="margin-right: 1rem;" ></nb-icon>
               status</th>
             <td>{{p.status}}<nb-icon icon="activity-outline" *ngIf="p.status=='active'" status ="success"style="margin-left: 2rem;"></nb-icon>
               <nb-icon icon="alert-triangle-outline" *ngIf="p.status=='inactive'" status ="warning" style="margin-left: 2rem;"></nb-icon></td>
           </tr>
-          <tr style="background-color:blanchedalmond;">
-            <th scope="row"  >
-              <nb-icon icon="clock-outline" style="margin-right: 1rem;" ></nb-icon>
-              duration</th>
-            <td>{{p.duration}} jours</td>
-          </tr>
         </table>
-          
       </nb-card>
       </nb-card-front>
       <nb-card-back> <nb-card size="meduim">
-
         <table class="table">
-        <th scope="row">
-          <nb-icon icon="credit-card-outline" style="margin-right: 1rem;" ></nb-icon>
-          budget</th>
-        <td>{{p.budget}}</td>
-        <tr>
           <th scope="row">
             <nb-icon icon="arrow-upward-outline" style="margin-right: 1rem;" ></nb-icon>
             priority</th>
-          <td>{{p.priority}}</td>
-        </tr>
+          <td style="text-align: center;">{{p.priority}}</td>
         <tr>
-          <th scope="row">
+          <th scope="row" >
             <nb-icon icon="loader-outline" style="margin-right: 1rem;" ></nb-icon>
             progress</th>
-          <td>{{p.progress}}</td>
+          <td style="margin-right: 2rem;">
+            <nb-progress-bar [value]="p.progress" status="primary" size="large" [displayValue]="true"></nb-progress-bar>
+            </td>
+        </tr>
+        <tr>
+          <th scope="row"  >
+            <nb-icon icon="clock-outline" style="margin-right: 1rem;" ></nb-icon>
+            budget</th>
+          <td>{{p.budget}}</td>
         </tr>
         <tr>
           <th scope="row">
             <nb-icon icon="trending-up-outline" style="margin-right: 1rem;" ></nb-icon>
             score</th>
-          <td>{{p.score}}</td>
-        </tr>
-        <tr>
-
-          <th scope="row">
-            <nb-icon icon="shuffle-outline" style="margin-right: 1rem;" ></nb-icon>
-            variance</th>
-          <td>{{p.variance}}</td>
+          <td style="text-align: center;">{{p.score}}</td>
         </tr>
         <tr>
           <th scope="row">
-            <nb-icon icon="bulb-outline" style="margin-right: 1rem;" ></nb-icon>
+            <nb-icon icon="pie-chart-outline" style="margin-right: 1rem;" ></nb-icon>
+            baseline date</th>
+          <td style="text-align: center;">{{getDate(p.baselineDate)}}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <nb-icon icon="pie-chart-outline" style="margin-right: 1rem;" ></nb-icon>
             forcast</th>
-          <td>{{p.forcast}}</td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <nb-icon icon="arrowhead-down-outline" style="margin-right: 1rem;" ></nb-icon>
-            actual</th>
-          <td>{{p.actual}}</td>
+          <td style="text-align: center;">{{getDate(p.forcast)}}</td>
         </tr>
       </table>
-
     </nb-card></nb-card-back>
-
-
       </nb-reveal-card>
     </div>
   </div>
 </div>
 </div>
 </nb-card>
-<nb-card>
-<div *ifPermission='["getAllProjects"]' style="margin-top: 1rem; margin-left: 1rem;">
+<nb-card >
+<div  style="margin-top: 1rem; margin-left: 1rem;" *ifDepartementPermission='["getAllProjects"]'>
   <h3>your projects</h3> 
 <div fxLayout="row wrap" >
     <div fxFlex="33%" *ngFor="let p of userProjects">
@@ -142,29 +141,30 @@
                   {{p.name}}</h5>
             </div>
             <div class="col-md-1">
-                <nb-icon icon="list-outline" nbTooltip="show more details" nbButton ></nb-icon>
+
+                <nb-icon icon="list-outline" (click)="openProjectDetails(p.id)" [routerLink]="['../project-details']" nbTooltip="show more details" nbButton ></nb-icon>
             </div>
             <div class="col-md-1">
-               <nb-icon icon="edit-outline" nbTooltip="edit project" (click)="openUpdateUserForm(u.id)" nbButton style="margin-left: 1rem;" ></nb-icon>
+               <nb-icon icon="edit-outline" nbTooltip="start project" nbButton style="margin-left: 1rem;" ></nb-icon>
             </div>
           </div>
         </nb-card-header>
         <table class="table ">
-          <th scope="row">
+          <th scope="row" style="background-color:blanchedalmond;">
             <nb-icon icon="npm-outline" style="margin-right: 1rem;" ></nb-icon>
             departement</th>
-          <td>back-end</td>
+          <td style="background-color:blanchedalmond;">{{p.departements[0].name}}</td>
           <tr>
             <th scope="row">
               <nb-icon icon="person-outline" style="margin-right: 1rem;" ></nb-icon>
               client</th>
-            <td>{{p.client}} </td>
+            <td>{{p.client.representiveName}}</td>
           </tr>
-          <tr>
-            <th scope="row">
+          <tr style="background-color:blanchedalmond;">
+            <th scope="row" >
               <nb-icon icon="layers-outline" style="margin-right: 1rem;" ></nb-icon>
               Project Manager</th>
-            <td>{{p.projectManager}}</td>
+            <td>{{p.projectManager.name}}</td>
           </tr>
           <tr>
             <th scope="row">
@@ -172,18 +172,10 @@
               status</th>
             <td>{{p.status}}</td>
           </tr>
-          <tr>
-            <th scope="row">
-              <nb-icon icon="clock-outline" style="margin-right: 1rem;" ></nb-icon>
-              duration</th>
-            <td>{{p.duration}} jours</td>
-          </tr>
         </table>
-          
       </nb-card>
       </nb-card-front>
       <nb-card-back> <nb-card size="meduim" accent="primary">
-
         <table class="table ">
         <th scope="row">
           <nb-icon icon="credit-card-outline" style="margin-right: 1rem;" ></nb-icon>
@@ -196,10 +188,12 @@
           <td>{{p.priority}}</td>
         </tr>
         <tr>
-          <th scope="row">
+          <th scope="row" >
             <nb-icon icon="loader-outline" style="margin-right: 1rem;" ></nb-icon>
             progress</th>
-          <td>{{p.progress}}</td>
+          <td style="margin-right: 2rem;">
+            <nb-progress-bar [value]="p.progress" status="primary" size="large" [displayValue]="true"></nb-progress-bar>
+            </td>
         </tr>
         <tr>
           <th scope="row">
@@ -207,29 +201,21 @@
             score</th>
           <td>{{p.score}}</td>
         </tr>
+        
         <tr>
           <th scope="row">
-            <nb-icon icon="shuffle-outline" style="margin-right: 1rem;" ></nb-icon>
-            variance</th>
-          <td>{{p.variance}}</td>
+            <nb-icon icon="pie-chart-outline" style="margin-right: 1rem;" ></nb-icon>
+            baseline date</th>
+          <td>{{getDate(p.baselineDate)}}</td>
         </tr>
         <tr>
           <th scope="row">
-            <nb-icon icon="bulb-outline" style="margin-right: 1rem;" ></nb-icon>
+            <nb-icon icon="pie-chart-outline" style="margin-right: 1rem;" ></nb-icon>
             forcast</th>
-          <td>{{p.forcast}}</td>
-        </tr>
-        <tr>
-          <th scope="row">
-            <nb-icon icon="arrowhead-down-outline" style="margin-right: 1rem;" ></nb-icon>
-            actual</th>
-          <td>{{p.actual}}</td>
+          <td >{{getDate(p.forcast)}}</td>
         </tr>
       </table>
-
     </nb-card></nb-card-back>
-
-
       </nb-reveal-card>
     </div>
   </div>
@@ -237,56 +223,61 @@
 </div>
 </nb-card>
 <ng-template #addProjectTemplate let-data>
-  <form (ngSubmit)="createNewProject(this.projectData)">
+  <form (ngSubmit)="createNewProject(this.projectData , data)">
       <div class="row">
         <div class="col-sm-12">
     <label for="inputProjectName" class="label">Project Name</label>
-    <input type="text" nbInput fullWidth id="inputProjectName" name="data.name" placeholder="Project Name" [(ngModel)]="this.projectData.name">
+    <input type="text" nbInput fullWidth id="inputProjectName" fieldSize="small"  name="data.name" placeholder="Project Name" [(ngModel)]="this.projectData.name">
     </div>
       </div>
     <div class="row">
-      <div class="col-sm-6">
+      <!-- <div class="col-sm-6">
         <div class="form-group">
           <label for="inputDuration" class="label">Duration</label>
-          <input type="number" nbInput fullWidth id="inputDuration" name="data.duration" placeholder="Duration" [(ngModel)]="this.projectData.duration">
+          <input type="number" nbInput fullWidth id="inputDuration" fieldSize="small" name="data.duration" placeholder="Duration" [(ngModel)]="this.projectData.duration">
         </div>
-      </div>
-        <div class="col-sm-6"> 
-          <label  class="label">select a project manager</label>
-          <nb-select name="select" placeholder="project manager" style="width:15rem" (selectedChange)="selectManager($event)">  
-          <nb-option *ngFor="let item of data.managers" [value]="item.id">{{item.name}} </nb-option>
-          </nb-select>
-        </div>
+      </div> -->
+       
     </div>
     <div class="row">
+      <div class="col-sm-6"> 
+        <label  class="label">select a project manager</label>
+        <nb-select name="select" placeholder="project manager" style="width:15rem" size="small" (selectedChange)="selectManager($event)">  
+        <nb-option *ngFor="let item of data.managers" [value]="item.id">{{item.name}} </nb-option>
+        </nb-select>
+      </div>
       <div class="col-sm-6">
         <div class="form-group">
           <label for="inputBudget" class="label">Budget</label>
-          <input type="number" nbInput fullWidth id="inputBudget" name="data.budget" placeholder="Budget" [(ngModel)]="this.projectData.budget" >
+          <input type="number" nbInput fullWidth id="inputBudget" fieldSize="small" name="data.budget" placeholder="Budget" [(ngModel)]="this.projectData.budget" >
         </div>
       </div>
-      <div class="col-sm-6">
+      <!-- <div class="col-sm-6">
         <div class="form-group">
           <label for="inputScore" class="label">score</label>
-          <input type="number" nbInput fullWidth id="inputScore" name="data.score" placeholder="score" [(ngModel)]="this.projectData.score" >
+          <input type="number" nbInput fullWidth id="inputScore" fieldSize="small" name="data.score" placeholder="score" [(ngModel)]="this.projectData.score" >
         </div>
-      </div>
+      </div> -->
+
     </div>
     <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-2">
       <label for="inputLastName" class="label">Priority</label>
       <div class="row">
         <div class="col-sm-4">
-          <nb-checkbox [checked]="data.priority" (checkedChange)="truePrioritytoggle()"> true</nb-checkbox>
-        </div>
-        <div class="col-sm-2">
-          <nb-checkbox (checkedChange)="falsePrioritytoggle()" [checked]="!data.priority"> false</nb-checkbox>
+          <nb-checkbox [checked]="projectData.priority" (checkedChange)="Prioritytoggle(this.projectData)"> true</nb-checkbox>
         </div>
       </div>
    </div>
    <div class="col-sm-4">
+    <label  class="label">select a departement for the project</label>
+    <nb-select name="select" placeholder="departement" style="width:15rem" size="small"(selectedChange)="selectDepartement($event)">  
+    <nb-option *ngFor="let item of data.departements" [value]="item.id"> {{item.name}} </nb-option>
+    </nb-select>
+  </div>
+   <div class="col-sm-4">
     <label  class="label">select a client for the project</label>
-    <nb-select name="select" placeholder="client" style="width:15rem" (selectedChange)="selectClient($event)">  
+    <nb-select name="select" placeholder="client" style="width:15rem" size="small"(selectedChange)="selectClient($event)">  
     <nb-option *ngFor="let item of data.clients" [value]="item.id"> {{item.representiveName}} </nb-option>
     </nb-select>
   </div>
@@ -296,9 +287,170 @@
 
     </div>
     <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputBudget" class="label">initialisation baseline Date</label>
+          <input nbInput fullWidth id="inputBudget" name="data.initbase" [nbDatepicker]="initBaseLine" fieldSize="small" placeholder="enter a date" [(ngModel)]="data.initbase" >
+          <nb-date-timepicker
+          #initBaseLine
+          singleColumn
+          [step]="10"></nb-date-timepicker>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputScore" class="label">initialisation forecasted Date</label>
+          <input  nbInput fullWidth id="inputScore" name="data.initforec" fieldSize="small" [nbDatepicker]="initForec" placeholder="enter a date" [(ngModel)]="data.initforec">
+          <nb-date-timepicker
+          #initForec
+          singleColumn
+          [step]="10"></nb-date-timepicker>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputBudget" class="label">planification baseline Date</label>
+          <input  nbInput fullWidth id="inputBudget" name="data.planificationbaseDate" [nbDatepicker]="planificationBaseLine" fieldSize="small" placeholder="enter a date" [(ngModel)]="data.planificationbaseDate" >
+          <nb-date-timepicker
+          #planificationBaseLine
+          singleColumn
+          [step]="10"></nb-date-timepicker>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputScore" class="label">planification forecasted Date</label>
+          <input  nbInput fullWidth id="inputScore" name="data.planificationforecDare" [nbDatepicker]="planificationforec" fieldSize="small" placeholder="enter a date" [(ngModel)]="data.planificationforecDare" >
+          <nb-date-timepicker
+          #planificationforec
+          singleColumn
+          [step]="10"></nb-date-timepicker>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputBudget" class="label">development baseline Date</label>
+          <input  nbInput fullWidth id="inputBudget" name="data.budget" fieldSize="small" [nbDatepicker]="devBaseLine"placeholder="enter a date" [(ngModel)]="data.devbaseDate" >
+          <nb-date-timepicker
+          #devBaseLine
+          singleColumn
+          [step]="10"></nb-date-timepicker>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputScore" class="label">development forecasted Date</label>
+          <input  nbInput fullWidth id="inputScore" name="data.score" fieldSize="small" [nbDatepicker]="devforec"placeholder="enter a date" [(ngModel)]="data.devforecDare" >
+          <nb-date-timepicker
+          #devforec
+          singleColumn
+          [step]="10"></nb-date-timepicker>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputBudget" class="label">deploiement baseline Date</label>
+          <input  nbInput fullWidth id="inputBudget" name="data.budget" [nbDatepicker]="depBaseLine" fieldSize="small" placeholder="enter a date" [(ngModel)]="data.depbaseDate" >
+          <nb-date-timepicker
+          #depBaseLine
+          singleColumn
+          [step]="10"></nb-date-timepicker>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputScore" class="label">deploiement forecasted Date</label>
+          <input  nbInput fullWidth id="inputScore" name="data.score" [nbDatepicker]="depforec" fieldSize="small" placeholder="enter a date" [(ngModel)]="data.depforecDare" >
+          <nb-date-timepicker
+          #depforec
+          singleColumn
+          [step]="10"></nb-date-timepicker>
+        </div>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-sm-12">
         <label for="inputDescription" class="label">add a description</label>
         <input type="text" id="inputDescription" name="data.description" nbInput fullWidth fieldSize="giant" placeholder="description (optional)" [(ngModel)]="data.description">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-8"></div>
+      <div class="col-sm-2">
+        <button type="submit" status ="primary" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+      </div>
+  </div>
+  </form>
+</ng-template>
+<ng-template #updateProjectTemplate let-data>
+  <form (ngSubmit)="updateProject(data.data)" [ngFormOptions]="{updateOn: 'blur'}">
+
+      <div class="row">
+        <div class="col-sm-12">
+    <label for="inputProjectName" class="label">Project Name</label>
+    <input type="text" nbInput fullWidth id="inputProjectName" name="projectToUpdate.name" placeholder="Project Name" [(ngModel)]="data.data.name">
+    </div>
+      </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inpuDuration" class="label">Duration</label>
+          <input type="number" nbInput fullWidth id="inputDuration" name="projectToUpdate.duration" placeholder="Duration" [(ngModel)]="data.data.duration">
+        </div>
+      </div>
+        <div class="col-sm-6"> 
+          <label  class="label">select a project manager</label>
+          <nb-select name="select" placeholder="project manager" style="width:15rem" (selectedChange)="updateManager($event, data.data)">  
+          <nb-option *ngFor="let item of data.managers" [value]="item.id">{{item.name}} </nb-option>
+          </nb-select>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputBudget" class="label">Budget</label>
+          <input type="number" nbInput fullWidth id="inputBudget" name="projectToUpdate.budget" placeholder="Budget" [(ngModel)]="data.data.budget" >
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="inputScore" class="label">score</label>
+          <input type="number" nbInput fullWidth id="inputScore" name="projectToUpdate.score" placeholder="score" [(ngModel)]="data.data.score" >
+        </div>
+      </div>
+    </div>
+    <div class="row">
+    <div class="col-sm-6">
+      <label for="inputLastName" class="label">Priority</label>
+      <div class="row">
+        <div class="col-sm-4">
+          <nb-checkbox [checked]="data.data.priority" (checkedChange)="data.data.priority=true"> true</nb-checkbox>
+        </div>
+        <div class="col-sm-2">
+          <nb-checkbox (checkedChange)="data.data.priority=false" [checked]="!data.data.priority"> false</nb-checkbox>
+        </div>
+      </div>
+   </div>
+   <div class="col-sm-6">
+    <label for="inputLastName" class="label">Status</label>
+        <div class="row">
+          <div class="col-sm-4">
+            <nb-checkbox [checked]="data.data.status!='inactive'" (checkedChange)="activeStatustoggle(data.data)"> active</nb-checkbox>
+          </div>
+        </div>
+
+    </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <label for="inputDescription" class="label">add a description</label>
+        <input type="text" id="inputDescription" name="projectToUpdate.description" nbInput fullWidth fieldSize="giant" placeholder="description (optional)" [(ngModel)]="projectToUpdate.description">
       </div>
     </div>
     <div class="row">
@@ -309,3 +461,7 @@
   </div>
   </form>
 </ng-template>
+
+<nb-sidebar start right tag="sidebar" style="background-color: darkblue;">
+ 
+</nb-sidebar>

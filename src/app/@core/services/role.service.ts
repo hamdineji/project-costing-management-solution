@@ -8,7 +8,10 @@ query {
   getAllRoles{
     id
     name 
-    permissions
+    listOfPermissions{
+      name 
+      category
+    }
   }
 }
 `
@@ -17,7 +20,11 @@ query
   getRoleById($id : ID){
     getRoleById(id : $id){
     name 
-    permissions 
+    listOfPermissions{
+      id 
+      name
+      category
+    } 
   }
 }
 `
@@ -32,7 +39,7 @@ getRolesByPermission($id : ID){
 
 const createRole = gql `
 mutation 
-  createRole($name : String , $permission : [ID]  ){
+  createRole($name : String , $permission : [PremissionsInput]  ){
     createRole(name : $name , permission : $permission) {
         name
     }
@@ -41,7 +48,7 @@ mutation
 
 const updateRole = gql `
 mutation 
-  updateRole($role : ID , $name : String , $permission : [ID]  ){
+  updateRole($role : ID , $name : String , $permission : [PremissionsInput]  ){
     updateRole(role : $role , name : $name , permission : $permission) {
         name
     }

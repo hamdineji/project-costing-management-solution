@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {NbButtonModule, NbCardModule,   NbCheckboxModule,   NbIconModule, NbInputModule, NbListModule, NbUserModule,} from '@nebular/theme'
+import {NbAccordionModule, NbButtonModule, NbCardModule,   NbCheckboxModule,   NbIconModule, NbInputModule, NbListModule, NbUserModule,} from '@nebular/theme'
 import { UsersRoutingModule } from './users-routing.module';
 import { UserComponent } from './user/user.component';
 import { ThemeModule } from '../../@theme/theme.module';
@@ -39,7 +39,8 @@ import {
     NbButtonModule,
     NbInputModule,
     NbCheckboxModule,
-    NbUserModule
+    NbUserModule,
+    NbAccordionModule
   ],
   
 

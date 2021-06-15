@@ -32,10 +32,10 @@ getPermissions(){
         query : getPermissions 
       })
 }
-getPermissionById(id){
-  return  this.apollo.query<Array<Permission>>({
-      query :  getPermissionById , 
-      variables:{id }
-    })
-}
+// getPermissionById(id){
+//   return  this.apollo.query<Array<Permission>>({
+//       query :  getPermissionById , 
+//       variables:{id }
+//     })
+// }
 }

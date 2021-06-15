@@ -1,5 +1,5 @@
 
-import { Input, OnInit, Directive, ViewContainerRef, TemplateRef, OnDestroy } from "@angular/core";
+import { Input, OnInit, Directive, ViewContainerRef, TemplateRef, OnDestroy, OnChanges, AfterContentInit, DoCheck, SimpleChanges } from "@angular/core";
 import { takeUntil } from "rxjs/operators";
 import{RoleService} from "../../@core/services/role.service";
 import{PermissionService} from "../../@core/services/permissions.service";
@@ -10,10 +10,11 @@ import { GetUserAction } from "../../@core/auth/ngrx-auth/auth.actions";
 @Directive({
   selector: '[ifPermission]'
 })
-export class IfPermissionDirective implements OnInit {
+export class IfPermissionDirective implements OnInit ,OnChanges {
   // the role the user must have
   @Input() public ifPermission: Array<string>;
-
+  @Input() 
+  newRoleEvent : boolean
   /**
    * @param {ViewContainerRef} viewContainerRef -- the location where we need to render the templateRef
    * @param {TemplateRef<any>} templateRef -- the templateRef to be potentially rendered
@@ -27,28 +28,34 @@ export class IfPermissionDirective implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-        this.store.dispatch(new GetUserAction)
-        this.store.select(currentUserSelector).subscribe((data : any)=>{
+        // this.store.dispatch(new GetUserAction)
+        // this.store.select(currentUserSelector).subscribe((data : any)=>{
+        //   var permissions   = data.permissions
+        //   console.log('permissions', permissions);
+        //   console.log('listofPermissions',this.ifPermission[0])
+        //     if(permissions.findIndex(x=>x.name==this.ifPermission[0])!=-1){
+        //       console.log("active")
+        //       this.viewContainerRef.createEmbeddedView(this.templateRef);
+        //     }
+        //   });        
+      }
+    
+      ngOnChanges(){
+   
+      this.store.dispatch(new GetUserAction)
+      this.store.select(currentUserSelector).subscribe((data : any)=>{
+        var permissions   = data.permissions
+        console.log("datadirective",data)
+          if(permissions.findIndex(x=>x.name==this.ifPermission[0])!=-1){
+            console.log("active")
+            this.viewContainerRef.createEmbeddedView(this.templateRef);
+          }
+          else{
+            this.viewContainerRef.clear()
+          }
+        });  
+    }
+    
+    }
 
-         let permissions=data.permissions ;
-          permissions.forEach(val => {this.permissionService.getPermissionById(val).subscribe((data:any)=>{
-            if(data.data.getPermissionById.name===this.ifPermission[0]){
 
-              this.viewContainerRef.createEmbeddedView(this.templateRef);
-            }
-          });
-          
-         
-        
-
-        }) 
-        
-       
-        })
-
-}
-
-  /**
-   * on destroy cancels the API if its fetching.
-   */
-}

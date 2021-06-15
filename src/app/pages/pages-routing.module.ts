@@ -12,6 +12,15 @@ const routes: Routes = [{
   component: PagesComponent,
   children: [
     {
+      path: 'users',
+      // canActivate:[PermissionGuardService],
+      loadChildren: () => import('./users/users.module')
+        .then(m => m.UsersModule),
+        data: { 
+          expectedRole: 'getUser'
+        } 
+    },
+    {
       path: 'dashboard',
       component: ECommerceComponent,
     },
@@ -24,15 +33,15 @@ const routes: Routes = [{
       loadChildren: () => import('./layout/layout.module')
         .then(m => m.LayoutModule),
     },
-    {
-      path: 'users',
-      // canActivate:[PermissionGuardService],
-      loadChildren: () => import('./users/users.module')
-        .then(m => m.UsersModule),
-        data: { 
-          expectedRole: 'getUser'
-        } 
-    },
+    // {
+    //   path: 'users',
+    //   // canActivate:[PermissionGuardService],
+    //   loadChildren: () => import('./users/users.module')
+    //     .then(m => m.UsersModule),
+    //     data: { 
+    //       expectedRole: 'getUser'
+    //     } 
+    // },
     {
       path: 'facturation',
       loadChildren: () => import('./facturation/facturation.module')
@@ -57,6 +66,11 @@ const routes: Routes = [{
       path: 'logs',
       loadChildren: () => import('./logs/logs.module')
         .then(m => m.LogsModule),
+    },
+    {
+      path: 'reports',
+      loadChildren: () => import('./reports/reports.module')
+        .then(m => m.ReportsModule),
     },
     {
       path: 'tasks',

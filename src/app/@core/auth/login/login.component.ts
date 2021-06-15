@@ -22,6 +22,7 @@ export class NgxLoginComponent implements OnInit{
   }
   alert : boolean =false ;
 currentUser : User ;
+showPassword = false;
   constructor( private _auth : LoginService, private _router: Router , private store : Store<AppState>){
 
 
@@ -29,19 +30,28 @@ currentUser : User ;
   ngOnInit(): void {
   }
 
+  getInputType() {
+    if (this.showPassword) {
+      return 'text';
+    }
+    return 'password';
+  }
+ 
+  toggleShowPassword() {
+    this.showPassword = !this.showPassword;
+  }
+
   connectC(){
     this._auth.connectUser(this.user1.email,this.user1.password)
       .subscribe(
         (res:any) => {
            localStorage.setItem('token', res.data.login)
-           this._router.navigate(['/pages/dashboard' ])
+           this._router.navigate(['/pages/users/user' ])
            this.store.dispatch(new SaveUserAction(this._auth.getUser(res.data.login)))
-           this.store.select((state)=>state).subscribe();
-           
+           this.store.select((state)=>state).subscribe();  
         }, 
         err => {
           this.alert = true ;
-
         }
       )
 
@@ -49,6 +59,7 @@ currentUser : User ;
  onClose(){
    this.alert=false
  }
+
 
 
 

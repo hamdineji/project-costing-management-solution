@@ -63,6 +63,18 @@ import {RoleService} from './services/role.service'
 import { ProjectService } from './services/projects.service';
 import { ClientService } from './services/clients.service';
 import { DepartementService } from './services/departements.service';
+import { PhaseService } from './services/phases.service';
+import { DependencyService } from './services/dependency.service';
+import { IssueService } from './services/issues.service';
+import { RiskService } from './services/risks.service';
+import { AssumptionService } from './services/assumptions.service';
+import { HighlightService } from './services/highlights.service';
+import { TaskService } from './services/tasks.service';
+import { MeetingService } from './services/meetings.service';
+import { RequestService } from './services/requests.service';
+import { VacationService } from './services/vacation.service';
+import { NotificationService } from './services/notification.service';
+import { LogsService } from './services/logs.service';
 
 const socialLinks = [
   {
@@ -162,6 +174,18 @@ export const NB_CORE_PROVIDERS = [
   ProjectService,
   ClientService,
   DepartementService,
+  PhaseService,
+  DependencyService,
+  IssueService,
+  RiskService,
+  AssumptionService,
+  HighlightService,
+  TaskService,
+  MeetingService,
+  LogsService,
+  RequestService,
+  VacationService,
+  NotificationService,
   { provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptorService,
     multi: true

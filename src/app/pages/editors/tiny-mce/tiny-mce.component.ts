@@ -11,7 +11,12 @@ import { Component } from '@angular/core';
         <ngx-tiny-mce></ngx-tiny-mce>
       </nb-card-body>
     </nb-card>
+
   `,
 })
 export class TinyMCEComponent {
+  html =""
+  afficher(){
+    console.log("hhhhh", this.html)
+  }
 }

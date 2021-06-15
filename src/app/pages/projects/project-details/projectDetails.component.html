@@ -1,0 +1,1708 @@
+<h2 style="text-align: center;">{{project.name}} Details</h2>
+<nb-card>
+    <nb-card-body>
+    <div class="row">
+        <div class="col-sm-1">
+            <strong>
+                Progress
+            </strong>
+        </div>
+        <nb-progress-bar class="col-sm-4" [value]="project.progress" status="primary" size="large" [displayValue]="true"></nb-progress-bar>
+        <div class="col-sm-2">
+           <strong>score</strong>  {{project.score}}/100
+        </div>
+        <div class="col-sm-3">
+            <div>
+                <strong>baseline date</strong> {{getDate(project.baselineDate)}}
+            </div>
+            <div>
+                <strong>forecasted date</strong> {{getDate(project.forcast)}}
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <button nbButton size="small"(click)="openAddReportWindow()">
+                add Report
+            </button>
+        </div>
+    </div>
+</nb-card-body>
+</nb-card>
+
+<nb-card style="margin-top: 1rem;">
+    <div class="row"> 
+        <div class="col-sm-10">
+            <h5 style="margin-left: 1rem; margin-top: 1rem;">project follow-up by deliverable</h5>
+        </div>
+    </div>
+    <div class="row" style="margin-left: 1rem;margin-right: 1rem; margin-top: 1rem;">  
+    <div class="col-sm-3">
+<nb-card>
+<nb-card-header  [style.background-color]="getcolor(initPhase.status)">
+    <div class="row">
+        <h6 class="col-sm-3">
+            <nb-icon icon="radio-button-off-outline" style="margin-right:1rem ;"></nb-icon>
+            </h6>
+            <h6 class="col-sm-8">{{initPhase.name}}</h6>
+
+            <!-- <nb-icon icon="arrow-forward-outline" class="col-sm-2" (click)="setPhaseStatus(initPhase.id)" nbTooltip="update status"></nb-icon> -->
+    </div>
+</nb-card-header> 
+<table class="table ">
+    <th scope="row" >
+        <div class="row">
+            <nb-icon icon="calendar-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>baseline Date 
+        </div>
+    </th>
+    <td>
+{{getDate(initPhase.baselineDate)}} </td>
+    <tr>
+        <th scope="row" >
+            <div class="row">
+                <nb-icon icon="clock-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                forecast Date
+            </div>
+            
+        </th>
+        <td>
+            <div class="row">
+                {{getDate(initPhase.forecastedDate)}}
+                <nb-icon icon="edit-outline" *ngIf="departement.CRapprovers.length!=0" nbTooltip=" change Date"style="margin-left: 0.5rem;" (click)="openCreateCRWindow(initPhase.forecastedDate,initPhase.id)" ></nb-icon>    
+            </div>
+           
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">
+            <div class="row">
+                <nb-icon icon="radio-button-on-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                status
+            </div>
+        </th>
+        <td style="text-align: center;">
+{{initPhase.status}}        </td>
+    </tr>
+    <tr>
+        <th scope="row">
+            <div class="row">
+                <nb-icon icon="file-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                deliverable
+            </div>      
+        </th>
+        <td>
+            <div class="row" *ngIf="initPhase.file">
+                <div class="col-sm-10" style="text-align: center;">
+            delivered 
+                </div>
+            <nb-icon icon="arrow-circle-down-outline" (click)="savefile(initPhase.file)" nbTooltip="download File">
+            </nb-icon>
+
+            </div>
+            <div class="row" *ngIf="!initPhase.file">
+                <div class="col-sm-10" style="text-align: center;">
+            not Yet 
+                </div>
+            <nb-icon icon="arrow-circle-up-outline" *ngIf="departement.DRapprovers.length!=0" (click)="openCreateDRWinodow(initPhase.id)" nbTooltip="create delivery request">
+            </nb-icon>
+
+            </div>
+      </td>
+    </tr>
+</table>
+</nb-card>
+</div> 
+<div class="col-sm-3">
+<nb-card>
+    <!-- [attr.aria-label]="planificationPhase.status ? 'delivered and delayed' : 'done':'delayed' : 'in progress' : 'waiting to start' " 
+    [style.background-color]="planificationPhase.status ? '#d97642':'#ddffbc' : '#be0000' :'lightblue' :'#be0000' " > -->
+    <nb-card-header [style.background-color]="getcolor(planificationPhase.status)">
+
+        <div class="row">
+            <h6 class="col-sm-3">
+                <nb-icon icon="clipboard-outline" style="margin-right: 1rem;"></nb-icon>
+                </h6>
+                <h6 class="col-sm-8">planification</h6>
+
+                <!-- <nb-icon icon="arrow-forward-outline" class="col-sm-2" (click)="setPhaseStatus(planificationPhase.id)" nbTooltip="update status"></nb-icon> -->
+        </div>
+</nb-card-header>
+        <table class="table ">
+            <th scope="row" >
+                <div class="row">
+                <nb-icon icon="calendar-outline" style="margin-right: 0.5rem; margin-left: 0.5rem;"></nb-icon>baseline Date
+            </div>
+            </th>
+            <td>
+                {{getDate(planificationPhase.baselineDate)}}
+            </td>
+            <tr>
+                <th scope="row" >
+                    <div class="row">
+                    <nb-icon icon="clock-outline" style="margin-right: 0.5rem; margin-left: 0.5rem;"></nb-icon>
+                    forecast Date
+                </div>
+                </th>
+                <td>
+                    <div class="row">
+                            {{getDate(planificationPhase.forecastedDate)}}
+                            <nb-icon  icon="edit-outline" style="margin-left: 0.5rem;" *ngIf="departement.CRapprovers.length!=0" nbTooltip=" change Date" (click)="openCreateCRWindow(planificationPhase.forecastedDate,planificationPhase.id)" ></nb-icon>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <div class="row">
+                        <nb-icon icon="radio-button-on-outline" style="margin-right: 0.5rem; margin-left: 0.5rem;"></nb-icon>
+                        status
+                    </div>
+                </th>
+                <td>
+    {{planificationPhase.status}}            </td>
+            </tr>
+            <tr>
+            <tr>
+                <th scope="row">
+                    <div class="row">
+                        <nb-icon icon="file-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                        deliverable
+                    </div>                   
+                </th>
+                <td>
+                    <div class="row" *ngIf="planificationPhase.file" >
+                        <div class="col-sm-10" style="text-align: center;">
+                    delivered 
+                        </div>
+                    <nb-icon icon="arrow-circle-down-outline" (click)="savefile(planificationPhase.file)" nbTooltip="download File">
+                    </nb-icon>
+    
+                    </div>
+                    <div class="row" *ngIf="!planificationPhase.file">
+                        <div class="col-sm-10" style="text-align: center;">
+                    not Yet 
+                        </div>
+                    <nb-icon icon="arrow-circle-up-outline" *ngIf="departement.DRapprovers.length!=0" (click)="openCreateDRWinodow(planificationPhase.id)" nbTooltip="create delivery request">
+                    </nb-icon>   
+                    </div>
+                </td>
+            </tr>
+        </table>
+</nb-card>
+</div>
+<div class="col-sm-3">
+<nb-card>
+    <nb-card-header  [style.background-color]="getcolor(devPhase.status)">
+            <div class="row">
+                <h6 class="col-sm-3">
+                    <nb-icon icon="monitor-outline" style="margin-right: 1rem;"></nb-icon>
+                    </h6>
+                    <h6 class="col-sm-8">development</h6>
+
+                    <!-- <nb-icon icon="arrow-forward-outline" class="col-sm-2" (click)="setPhaseStatus(devPhase.id)" nbTooltip="update status"></nb-icon> -->
+            </div>
+    </nb-card-header> 
+    <table class="table">
+        <th scope="row">
+            <div class="row">
+                <nb-icon icon="calendar-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                baseline Date 
+            </div>
+        </th>
+        <td>
+        {{getDate(devPhase.baselineDate)}} 
+       </td>
+        <tr>
+            <th scope="row" >
+                <div class="row"> 
+                    <nb-icon icon="clock-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                    forecast Date
+                </div>
+            </th>
+            <td>
+                <div class="row">
+                    {{getDate(devPhase.forecastedDate)}}   
+                    <nb-icon icon="edit-outline"*ngIf="departement.CRapprovers.length!=0"  nbTooltip=" change Date"style="margin-left: 0.5rem;" (click)="openCreateCRWindow(devPhase.forecastedDate,devPhase.id)" ></nb-icon>
+                </div>
+</td>
+        </tr>
+        <tr>
+            <th scope="row">
+                <div class="row">
+                    <nb-icon icon="radio-button-on-outline" style="margin-right: 0.5rem; margin-left: 0.5rem;"></nb-icon>
+                    status
+                </div>
+                
+            </th>
+            <td>
+{{devPhase.status}}            </td>
+        </tr>
+        <tr>
+            <th scope="row">
+                <div class="row">
+                    <nb-icon icon="file-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                    deliverable
+                </div>
+            </th>
+            <td>
+                <div class="row" *ngIf="false">
+                    <div class="col-sm-10" style="text-align: center;">
+                delivered 
+                    </div>
+                <nb-icon icon="arrow-circle-down-outline" (click)="savefile(devPhase.file)" nbTooltip="download File">
+                </nb-icon>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10" style="text-align: center;">
+                not Yet 
+                    </div>
+                <nb-icon icon="arrow-circle-up-outline" *ngIf="departement.DRapprovers.length!=0" (click)="openCreateDRWinodow(devPhase.id)" nbTooltip="create Delivery Request">
+                </nb-icon>
+
+                </div>
+            </td>
+        </tr>
+    </table>
+</nb-card>
+</div>
+<div class="col-sm-3">
+<nb-card>
+    <nb-card-header  [style.background-color]="getcolor(depPhase.status)">
+            <div class="row">
+                <h6 class="col-sm-3">
+                    <nb-icon icon="cloud-upload-outline" style="margin-right: 1rem;"></nb-icon>
+                    </h6>
+                    <h6 class="col-sm-8">deploiement</h6>
+                    <!-- <nb-icon icon="arrow-forward-outline" class="col-sm-2" (click)="setPhaseStatus(depPhase.id)" nbTooltip="update status"></nb-icon> -->
+            </div>
+    </nb-card-header> 
+    <table class="table ">
+        <th scope="row" >
+            <div class="row">
+                <nb-icon icon="calendar-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                baseline Date 
+            </div>
+        </th>
+        <td>
+            {{getDate(depPhase.baselineDate)}}        </td>
+        <tr>
+            <th scope="row" >
+                <div class="row">
+                    <nb-icon icon="clock-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                    forecast Date
+                </div>
+            </th>
+            <td>
+                <div class="row">
+                    {{getDate(depPhase.forecastedDate)}}   
+                    <nb-icon icon="edit-outline" *ngIf="departement.CRapprovers.length!=0" nbTooltip=" change Date"style="margin-left: 0.5rem;" (click)="openCreateCRWindow(depPhase.forecastedDate,depPhase.id)" ></nb-icon>
+                </div>
+             </td>
+        </tr>
+        <tr>
+            <th scope="row">
+                <div class="row">
+                    <nb-icon icon="radio-button-on-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                    status
+                </div>
+            </th>
+            <td>
+                {{depPhase.status}}            
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">
+                <div class="row">
+                    <nb-icon icon="file-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
+                    deliverable
+                </div>
+            </th>
+            <td>
+                <div class="row" *ngIf="false">
+                    <div class="col-sm-10" style="text-align: center;">
+                delivered 
+                    </div>
+                <nb-icon icon="arrow-circle-down-outline" (click)="savefile(depPhase.file)"  nbTooltip="download File">
+                </nb-icon>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-10" style="text-align: center;">
+                not Yet 
+                    </div>
+                <nb-icon icon="arrow-circle-up-outline" *ngIf="departement.DRapprovers.length!=0" (click)="openCreateDRWinodow(depPhase.id)"  nbTooltip="create delivery request">
+                </nb-icon>
+                </div>
+            </td>
+        </tr>
+    </table>
+</nb-card>
+</div>
+</div>
+</nb-card>
+<nb-card>
+<nb-tabset fullWidth>
+    <nb-tab tabTitle="Raids">
+            <div class="row" style="margin-top: 1rem;" >
+                <nb-card class="col-md-5" style="margin-left: 3rem;">
+                    <nb-card-header>
+                        <h5>
+                            raids 
+                        </h5>
+                    </nb-card-header>
+                    <nb-card style="background-color: mediumaquamarine;" >
+                        <nb-card-header>
+                            <div class="row" >
+                                <div class="col-md-1">                            
+                                    <nb-icon icon="sun-outline"></nb-icon>   
+                                </div>
+                                <div class="col-md-7">
+                                    list of highlights 
+                                </div>
+                                <div class="col-md-2">
+                                    {{highlights.length}}
+                                </div>
+                                <div class="col-md-1">
+                                    <nb-icon icon="plus-outline" nbTooltip="new Highlight" (click)="openCreateHighlightWindow()" nbButton></nb-icon>
+                                </div>
+                                <div style="margin-left: 1rem;">
+                                    <nb-icon icon="eye-off-outline" *ngIf="Raid.items != highlights" (click)="showAllHighlights()" nbTooltip="show Highlight"></nb-icon>
+                                    <nb-icon icon="eye-outline" *ngIf="Raid.items == highlights"></nb-icon>
+                                </div>
+                            </div>
+                        </nb-card-header> 
+                    </nb-card>
+                <nb-card style="background-color: burlywood;">
+                    <nb-card-header>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <nb-icon icon="alert-circle-outline" ></nb-icon>
+                            </div>
+                            <div class="col-md-7">
+                                list of issues 
+                            </div>
+                            <div class="col-md-2">
+                                {{issues.length}}
+                            </div>
+                            <div class="col-md-1">
+                                <nb-icon icon="plus-outline" nbTooltip="new Issue" (click)="openCreateIssueWindow()"></nb-icon>
+                            </div>
+                            <div style="margin-left: 1rem;">
+                                <nb-icon icon="eye-off-outline" *ngIf="Raid.items != issues" (click)="showAllIssues()" nbTooltip="show Issues"></nb-icon>
+                                <nb-icon icon="eye-outline" *ngIf="Raid.items== issues" (click)="showAllIssues()"></nb-icon>
+                            </div>
+                        </div>
+                    </nb-card-header>
+                </nb-card>
+                <nb-card style="background-color: indianred;">
+                    <nb-card-header>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <nb-icon icon="close-outline"></nb-icon>
+                            </div>
+                            <div class="col-md-7">
+                                list of risks 
+                            </div>
+                            <div class="col-md-2">
+                                {{risks.length}}
+                            </div>
+                            <div class="col-md-1">
+                                <nb-icon icon="plus-outline" nbTooltip="new Risk" (click)="openCreateRiskWindow()"></nb-icon>
+                            </div>
+                            <div style="margin-left: 1rem;">
+                                <nb-icon icon="eye-off-outline" *ngIf="Raid.items != risks" (click)="showAllRisks()" nbTooltip="show Risks"></nb-icon>
+                                <nb-icon icon="eye-outline" *ngIf="Raid.items== risks" (click)="showAllRisks()"></nb-icon>
+                            </div>
+                        </div>
+                    </nb-card-header> 
+                </nb-card>
+                <nb-card style="background-color: cadetblue;">
+                    <nb-card-header>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <nb-icon icon="layers-outline"></nb-icon>  
+                            </div>
+                            <div class="col-md-7">
+                                list of dependencies 
+                            </div>
+                            <div class="col-md-2">
+                                {{dependencies.length}}
+                            </div>
+                            <div class="col-md-1">
+                                <nb-icon icon="plus-outline" nbTooltip="new Dependency" (click)="openCreateDependencyWindow()"></nb-icon>
+                            </div>
+                            <div style="margin-left: 1rem;">
+                                <nb-icon icon="eye-off-outline" *ngIf="Raid.items!= dependencies" (click)="showAllDeps()" nbTooltip="show Dependencies"></nb-icon>
+                                <nb-icon icon="eye-outline" *ngIf="Raid.items== dependencies" (click)="showAllDeps()"></nb-icon>
+                            </div>
+                        </div>                
+                    </nb-card-header> 
+                </nb-card>
+                <nb-card style="background-color: darkgrey;">
+                    <nb-card-header>
+                        <div class="row">
+                            <div class="col-md-1">                        
+                                <nb-icon icon="bulb-outline"></nb-icon>
+                            </div>
+                            <div class="col-md-7">
+                                list of assumptions 
+                            </div>
+                            <div class="col-md-2">
+                                {{assumptions.length}}
+                            </div>
+                            <div class="col-md-1">
+                                <nb-icon icon="plus-outline" nbTooltip="new Assumption" (click)="openCreateAssumptionWindow()"></nb-icon>
+                            </div>
+                            <div style="margin-left: 1rem;">
+                                <nb-icon icon="eye-off-outline" *ngIf="Raid.items != assumptions" (click)="showAllAssumptions()" nbTooltip="show Assumptions"></nb-icon>
+                                <nb-icon icon="eye-outline" *ngIf="Raid.items == assumptions" (click)="showAllAssumptions()"></nb-icon>
+                            </div>
+                        </div>  
+                    </nb-card-header> 
+                </nb-card>  
+                </nb-card>
+                <nb-card class="col-md-6" style="margin-right: 1rem;" >
+                    <nb-card-header>
+                        <h5 style="text-align: center;"> {{Raid.name}}</h5>
+                    </nb-card-header>
+                    <div >
+                    <div *ngFor="let item of Raid.items"  >
+                        <nb-card  nbPopoverPlacement="top" >
+                            <nb-card-header [style.background-color]="Raid.color">
+                                <div class="row" >
+                                    <nb-user class="col-md-4"
+                                    picture="assets/images/{{item.user.image}}"
+                                    name="{{item.user.name}}"
+                                    >
+                                    </nb-user>
+                                   <div class="col-md-4" *ngIf="item.description.length>15" style="margin-top: 0.5rem;">
+                                    {{item.description.substr(0,15)}} ...
+                                   </div>
+                                   <div class="col-md-4" *ngIf="!(item.description.length>15)" style="margin-top: 0.5rem;">
+                                    {{item.description}} 
+                                   </div>
+                                   <div class="col-md-3" style="margin-top: 0.5rem;">
+                                       {{getDate(item.dateRaised)}}
+                                   </div>
+                                   <nb-icon icon="more-horizontal-outline" style="margin-top: 0.5rem;" [nbPopover]="popoverTemplate" (click)="showDetails(item)"  nbTooltip="more details">
+                                   </nb-icon>
+                                </div>
+                            </nb-card-header>
+                        </nb-card>
+                    </div>
+                </div>
+                </nb-card>
+            </div>
+    </nb-tab>
+    <nb-tab tabTitle="Tasks">
+        <nb-card>
+            <nb-card-header>
+                <div class="row">
+                    <div class="col-sm-10">
+                        list of tasks
+                    </div>
+                    <div >
+                        <button nbButton size="small" (click)="openCreateTaskWindow()"> 
+                            <nb-icon icon="plus-outline"></nb-icon>
+                            add task </button>
+                    </div>
+                </div>
+            </nb-card-header>
+            <nb-card-header style="max-height: 60vh; overflow-y: scroll">
+                <nb-card *ngFor="let item of tasks" >
+                     <nb-card-header style="background-color: lightblue;">
+                         <div class="row">
+                         <nb-user class="col-sm-2"
+                         picture = "assets/images/{{item.user.image}}"
+                         name = "{{item.user.name}}"
+                         >
+                         </nb-user>
+                         <div class="col-sm-3" *ngIf="item.description.length>30">
+                             <p>{{item.description.substr(0,30)}}...</p>
+                         </div>
+                         <div class="col-sm-3" *ngIf="!(item.description.length>30)">
+                            <p>{{item.description}}</p>
+                        </div>
+                        <div class="col-sm-1">
+                            {{item.status}}
+                        </div>
+                        <div class="col-sm-1">
+                            <nb-icon icon="bulb-outline" *ngIf="item.status=='new'" style="color: crimson;"></nb-icon>
+                            <nb-icon icon="activity-outline" *ngIf="item.status=='in progress'" style="color: mediumseagreen;"></nb-icon>
+                            <nb-icon icon="checkmark-outline" *ngIf="item.status=='done'" style="color: darkblue;"></nb-icon>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    start
+                                </div>
+                                <div class="col-sm-8" style="margin-top: 0.15rem;">
+                                    <p>{{getDate(item.startDate)}}</p>
+                                </div>
+                            </div>    
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="row">
+                              <div class="col-sm-2">end </div>
+                                <div class="col-sm-8" style="margin-top: 0.15rem;"><p> {{getDate(item.endDate)}}</p></div>  
+                            </div>
+                        </div>
+                        <div class ="col-sm-1">
+                            <nb-icon icon="arrow-forward-outline" nbTooltip="update task status" *ngIf="item.user.id==userId.user.id" (click)="setTaskStatus(item)"> </nb-icon>
+                            <nb-icon icon="more-horizontal-outline" nbTooltip="change request" style="margin-left: 1rem;" (click)="showTaskDetails(item)" [nbPopover]="popoverTaskTemplate" > </nb-icon>
+                        </div>
+                        </div>
+                     </nb-card-header>
+                </nb-card>
+            </nb-card-header>
+        </nb-card> 
+    </nb-tab>
+    <nb-tab tabTitle="Meetings">
+        <nb-card>
+            <nb-card-header>
+                <div class="row">
+                    <div class="col-sm-10">
+                        List Of Meetings
+                    </div>
+                    <div >
+                        <button nbButton size="small" (click)="openCreateMeetingWindow()" ><nb-icon icon="plus-outline" ></nb-icon> add Meeting</button>
+                    </div>
+                </div>
+            </nb-card-header>
+            <nb-card-header>
+                <div fxLayout="row wrap"  style="margin-top: 1rem;margin-left: 1rem;">
+                    <div fxFlex="45%" style="margin-left: 1rem;"  *ngFor="let item of meets" >
+                <nb-card>
+                    <nb-card-header style="background-color: bisque;">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <nb-user
+                        picture="assets/images/{{item.user.image}}"
+                        name="{{item.user.name}}">
+                        </nb-user>
+                            </div>
+                            <div class="col-sm-2">
+                                <nb-icon icon="edit-outline" nbTooltip="update Meeting" (click)="openUpdateMeetingWindow(item)" >
+                                </nb-icon>
+                            </div>
+                    </div>
+                    </nb-card-header>
+                    <nb-card-header>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                subject : <p style="margin-top: 0.15rem;"> {{item.subject}}</p>
+                            </div>    
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                date : <p style="margin-top: 0.15rem;"> {{getDate(item.date)}}</p>
+                            </div>  
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                location : <p style="margin-top: 0.15rem;">  {{item.location}}</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                duration : <p style="margin-top: 0.15rem;"> {{item.duration}}</p>
+                            </div>  
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            guests :
+                        </div>
+                        <div class="col-sm-10">
+                            <div fxLayout="row wrap" >
+                                <div fxFlex="50%" *ngFor="let guest of item.guests "   >
+                                   <div class="row" style="background-color: azure; margin-left: 2rem; margin-bottom: 1rem;">    
+                                    <nb-icon class="col-sm-4"icon="person-outline"> 
+                                    </nb-icon>
+                                   <div style="text-align: end;">
+                                    {{guest.name}}
+                                   </div> 
+                                </div>
+                                </div>
+                            </div>
+                        </div>   
+                    </div>
+                    <div *ngIf="item.decisions!=null">
+                           Meeting decisions :
+                        <div *ngFor="let decision of item.decisions">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <p>
+                                        {{decision.name}}
+                                    </p>
+                                </div>
+                                    <div class="col-sm-4">
+                                        <button nbButton (click)="saveDecisionFile(decision.file[0].name,decision.file[0].id)" size="tiny"> decision File</button>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+        
+                        </div>
+                        <div class="col-sm-4">
+                            <button nbButton (click)="openCreateMeetDecisionWindow(item.id)"> add Decision</button>
+                        </div>
+                    </div>
+                </nb-card-header>
+                </nb-card>
+                    </div>
+                </div>
+            </nb-card-header>
+        </nb-card>
+    </nb-tab>
+    <nb-tab tabTitle="Requests">
+        <nb-card>
+            <nb-card-header>
+                list of Change Requests
+            </nb-card-header>
+            <nb-card-header style="max-height: 60vh; overflow-y: scroll " >
+                <div *ngFor="let item of CRrequests">
+                <nb-card style="background-color: darkgray;" >
+                <nb-card-header >
+                    <div class="row">
+                        <div class="col-sm-1" style="margin-right: 1rem;">
+                            <nb-user 
+                            name="{{item.user.name}}"
+                            picture="assets/images/{{item.user.image}}"
+                            >
+                            </nb-user>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="row">
+                                Raised Date: <p style="margin-top: 0.15rem;margin-left: 0.5rem;font-size: small;">{{getDate(item.dateRaised)}}</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                           <div class="row">
+                            type:<p style="margin-top: 0.15rem;margin-left: 0.5rem;font-size:small;">
+                            {{item.type}}
+                           </p>  
+                        </div> 
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="row" *ngIf="item.type==CR">
+                                current date:<p style="margin-top: 0.15rem;margin-left: 0.5rem;font-size: small;">{{getDate(item.currentDate)}}</p>
+                            </div>
+                            <div class="row" *ngIf="item.type==DR">
+                                phase :<p style="margin-top: 0.15rem;margin-left: 0.5rem;font-size: small;">{{item.phase.name}}</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="row" *ngIf="item.type==CR">
+                                suggested date:<p style="margin-top: 0.15rem;margin-left: 0.5rem;font-size: small;">{{getDate(item.newDate)}}</p>
+                            </div>
+                            <div class="row" *ngIf="item.type==DR">
+                                see File <div style="margin-top: 0.15rem;margin-left: 0.5rem;font-size: small;"><nb-icon icon="arrow-circle-down-outline" (click)="savefile(item.file)"></nb-icon></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <button nbButton (click)="openUpdateCR(item)">Decision</button>
+                        </div>
+                    </div>
+                </nb-card-header>
+            </nb-card>
+        </div>
+            </nb-card-header>
+        </nb-card>
+    </nb-tab>
+</nb-tabset>
+</nb-card>
+<!-- <nb-card style="overflow-y : scroll ;">
+    <div class="row" style="margin-top: 1rem;" >
+        <nb-card class="col-md-5" style="margin-left: 3rem;">
+            <nb-card-header>
+                <h5>
+                    raids 
+                </h5>
+            </nb-card-header>
+            <nb-card style="background-color: mediumaquamarine;" >
+                <nb-card-header>
+                    <div class="row" >
+                        <div class="col-md-1">                            
+                            <nb-icon icon="sun-outline"></nb-icon>   
+                        </div>
+                        <div class="col-md-7">
+                            list of highlights 
+                        </div>
+                        <div class="col-md-2">
+                            {{highlights.length}}
+                        </div>
+                        <div class="col-md-1">
+                            <nb-icon icon="plus-outline" nbTooltip="new Highlight" (click)="openCreateHighlightWindow()" nbButton></nb-icon>
+                        </div>
+                        <div style="margin-left: 1rem;">
+                            <nb-icon icon="eye-off-outline" *ngIf="Raid.items != highlights" (click)="showAllHighlights()" nbTooltip="show Highlight"></nb-icon>
+                            <nb-icon icon="eye-outline" *ngIf="Raid.items == highlights"></nb-icon>
+                        </div>
+                    </div>
+                </nb-card-header> 
+            </nb-card>
+        <nb-card style="background-color: burlywood;">
+            <nb-card-header>
+                <div class="row">
+                    <div class="col-md-1">
+                        <nb-icon icon="alert-circle-outline" ></nb-icon>
+                    </div>
+                    <div class="col-md-7">
+                        list of issues 
+                    </div>
+                    <div class="col-md-2">
+                        {{issues.length}}
+                    </div>
+                    <div class="col-md-1">
+                        <nb-icon icon="plus-outline" nbTooltip="new Issue" (click)="openCreateIssueWindow()"></nb-icon>
+                    </div>
+                    <div style="margin-left: 1rem;">
+                        <nb-icon icon="eye-off-outline" *ngIf="Raid.items != issues" (click)="showAllIssues()" nbTooltip="show Issues"></nb-icon>
+                        <nb-icon icon="eye-outline" *ngIf="Raid.items== issues" (click)="showAllIssues()"></nb-icon>
+                    </div>
+                </div>
+            </nb-card-header>
+        </nb-card>
+        <nb-card style="background-color: indianred;">
+            <nb-card-header>
+                <div class="row">
+                    <div class="col-md-1">
+                        <nb-icon icon="close-outline"></nb-icon>
+                    </div>
+                    <div class="col-md-7">
+                        list of risks 
+                    </div>
+                    <div class="col-md-2">
+                        {{risks.length}}
+                    </div>
+                    <div class="col-md-1">
+                        <nb-icon icon="plus-outline" nbTooltip="new Risk" (click)="openCreateRiskWindow()"></nb-icon>
+                    </div>
+                    <div style="margin-left: 1rem;">
+                        <nb-icon icon="eye-off-outline" *ngIf="Raid.items != risks" (click)="showAllRisks()" nbTooltip="show Risks"></nb-icon>
+                        <nb-icon icon="eye-outline" *ngIf="Raid.items== risks" (click)="showAllRisks()"></nb-icon>
+                    </div>
+                </div>
+            </nb-card-header> 
+        </nb-card>
+        <nb-card style="background-color: cadetblue;">
+            <nb-card-header>
+                <div class="row">
+                    <div class="col-md-1">
+                        <nb-icon icon="layers-outline"></nb-icon>  
+                    </div>
+                    <div class="col-md-7">
+                        list of dependencies 
+                    </div>
+                    <div class="col-md-2">
+                        {{dependencies.length}}
+                    </div>
+                    <div class="col-md-1">
+                        <nb-icon icon="plus-outline" nbTooltip="new Dependency" (click)="openCreateDependencyWindow()"></nb-icon>
+                    </div>
+                    <div style="margin-left: 1rem;">
+                        <nb-icon icon="eye-off-outline" *ngIf="Raid.items!= dependencies" (click)="showAllDeps()" nbTooltip="show Dependencies"></nb-icon>
+                        <nb-icon icon="eye-outline" *ngIf="Raid.items== dependencies" (click)="showAllDeps()"></nb-icon>
+                    </div>
+                </div>                
+            </nb-card-header> 
+        </nb-card>
+        <nb-card style="background-color: darkgrey;">
+            <nb-card-header>
+                <div class="row">
+                    <div class="col-md-1">                        
+                        <nb-icon icon="bulb-outline"></nb-icon>
+                    </div>
+                    <div class="col-md-7">
+                        list of assumptions 
+                    </div>
+                    <div class="col-md-2">
+                        {{assumptions.length}}
+                    </div>
+                    <div class="col-md-1">
+                        <nb-icon icon="plus-outline" nbTooltip="new Assumption" (click)="openCreateAssumptionWindow()"></nb-icon>
+                    </div>
+                    <div style="margin-left: 1rem;">
+                        <nb-icon icon="eye-off-outline" *ngIf="Raid.items != assumptions" (click)="showAllAssumptions()" nbTooltip="show Assumptions"></nb-icon>
+                        <nb-icon icon="eye-outline" *ngIf="Raid.items == assumptions" (click)="showAllAssumptions()"></nb-icon>
+                    </div>
+                </div>  
+            </nb-card-header> 
+        </nb-card>  
+        </nb-card>
+        <nb-card class="col-md-6" style="margin-right: 1rem;" >
+            <nb-card-header>
+                <h5 style="text-align: center;"> {{Raid.name}}</h5>
+            </nb-card-header>
+            <div >
+            <div *ngFor="let item of Raid.items"  >
+                <nb-card  nbPopoverPlacement="top" >
+                    <nb-card-header [style.background-color]="Raid.color">
+                        <div class="row" >
+                            <nb-user class="col-md-4"
+                            picture="assets/images/{{item.user.image}}"
+                            name="{{item.user.name}}"
+                            >
+                            </nb-user>
+                           <div class="col-md-4" *ngIf="item.description.length>15" style="margin-top: 0.5rem;">
+                            {{item.description.substr(0,15)}} ...
+                           </div>
+                           <div class="col-md-4" *ngIf="!(item.description.length>15)" style="margin-top: 0.5rem;">
+                            {{item.description}} 
+                           </div>
+                           <div class="col-md-3" style="margin-top: 0.5rem;">
+                               {{getDate(item.dateRaised)}}
+                           </div>
+                           <nb-icon icon="more-horizontal-outline" style="margin-top: 0.5rem;" [nbPopover]="popoverTemplate" (click)="showDetails(item)"  nbTooltip="more details">
+                           </nb-icon>
+                        </div>
+                    </nb-card-header>
+                </nb-card>
+            </div>
+        </div>
+        </nb-card>
+    </div>
+</nb-card>
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-sm-10">
+                list of tasks
+            </div>
+            <div >
+                <button nbButton (click)="openCreateTaskWindow()"> 
+                    <nb-icon icon="plus-outline"></nb-icon>
+                    add task </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-header>
+        <nb-card *ngFor="let item of tasks" >
+             <nb-card-header style="background-color: lightblue;">
+                 <div class="row">
+                 <nb-user class="col-sm-2"
+                 picture = "assets/images/{{item.user.image}}"
+                 name = "{{item.user.name}}"
+                 >
+                 </nb-user>
+                 <div class="col-sm-3" *ngIf="item.description.length>30">
+                     <p>{{item.description.substr(0,30)}}...</p>
+                 </div>
+                 <div class="col-sm-3" *ngIf="!(item.description.length>30)">
+                    <p>{{item.description}}</p>
+                </div>
+                <div class="col-sm-1">
+                    {{item.status}}
+                </div>
+                <div class="col-sm-1">
+                    <nb-icon icon="bulb-outline" *ngIf="item.status=='new'" style="color: crimson;"></nb-icon>
+                    <nb-icon icon="activity-outline" *ngIf="item.status=='in progress'" style="color: mediumseagreen;"></nb-icon>
+                    <nb-icon icon="checkmark-outline" *ngIf="item.status=='done'" style="color: darkblue;"></nb-icon>
+                </div>
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            start
+                        </div>
+                        <div class="col-sm-8" style="margin-top: 0.15rem;">
+                            <p>{{getDate(item.startDate)}}</p>
+                        </div>
+                    </div>    
+                </div>
+                <div class="col-sm-2">
+                    <div class="row">
+                      <div class="col-sm-2">end </div>
+                        <div class="col-sm-8" style="margin-top: 0.15rem;"><p> {{getDate(item.endDate)}}</p></div>  
+                    </div>
+                </div>
+                <div class ="col-sm-1">
+                    <nb-icon icon="arrow-forward-outline" nbTooltip="update task status" *ngIf="item.user.id==userId.user.id" (click)="setTaskStatus(item)"> </nb-icon>
+                    <nb-icon icon="more-horizontal-outline" nbTooltip="change request" style="margin-left: 1rem;" (click)="showTaskDetails(item)" [nbPopover]="popoverTaskTemplate" > </nb-icon>
+                </div>
+                </div>
+             </nb-card-header>
+        </nb-card>
+    </nb-card-header>
+</nb-card>   
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-sm-10">
+                List Of Meetings
+            </div>
+            <div >
+                <button nbButton (click)="openCreateMeetingWindow()" ><nb-icon icon="plus-outline" ></nb-icon> add Meeting</button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-header>
+        <div fxLayout="row wrap"  style="margin-top: 1rem;margin-left: 1rem;">
+            <div fxFlex="45%" style="margin-left: 1rem;"  *ngFor="let item of meets" >
+        <nb-card>
+            <nb-card-header style="background-color: bisque;">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <nb-user
+                picture="assets/images/{{item.user.image}}"
+                name="{{item.user.name}}">
+                </nb-user>
+                    </div>
+                    <div class="col-sm-2">
+                        <nb-icon icon="edit-outline" nbTooltip="update Meeting" (click)="openUpdateMeetingWindow(item)" >
+                        </nb-icon>
+                    </div>
+            </div>
+            </nb-card-header>
+            <nb-card-header>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="row">
+                        subject : <p style="margin-top: 0.15rem;"> {{item.subject}}</p>
+                    </div>    
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        date : <p style="margin-top: 0.15rem;"> {{getDate(item.date)}}</p>
+                    </div>  
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="row">
+                        location : <p style="margin-top: 0.15rem;">  {{item.location}}</p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        duration : <p style="margin-top: 0.15rem;"> {{item.duration}}</p>
+                    </div>  
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    guests :
+                </div>
+                <div class="col-sm-10">
+                    <div fxLayout="row wrap" >
+                        <div fxFlex="50%" *ngFor="let guest of item.guests "   >
+                           <div class="row" style="background-color: azure; margin-left: 2rem; margin-bottom: 1rem;">    
+                            <nb-icon class="col-sm-4"icon="person-outline"> 
+                            </nb-icon>
+                           <div style="text-align: end;">
+                            {{guest.name}}
+                           </div> 
+                        </div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div *ngIf="item.decisions!=null">
+                   Meeting decisions :
+                <div *ngFor="let decision of item.decisions">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <p>
+                                {{decision.name}}
+                            </p>
+                        </div>
+                            <div class="col-sm-4">
+                                <button nbButton (click)="saveDecisionFile(decision.file[0].name,decision.file[0].id)" size="tiny"> decision File</button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+
+                </div>
+                <div class="col-sm-4">
+                    <button nbButton (click)="openCreateMeetDecisionWindow(item.id)"> add Decision</button>
+                </div>
+            </div>
+        </nb-card-header>
+        </nb-card>
+            </div>
+        </div>
+    </nb-card-header>
+</nb-card> 
+<nb-card>
+    <nb-card-header>
+        list of Change Requests
+    </nb-card-header>
+    <nb-card-header *ngFor="let item of CRrequests" >
+        <nb-card style="background-color: darkgray;" >
+        <nb-card-header >
+            <div class="row">
+                <div class="col-sm-1" style="margin-right: 1rem;">
+                    <nb-user 
+                    name="{{item.user.name}}"
+                    picture="assets/images/{{item.user.image}}"
+                    >
+                    </nb-user>
+                </div>
+                <div class="col-sm-2">
+                    <div class="row">
+                        Raised Date: <p style="margin-top: 0.15rem;margin-left: 0.5rem;font-size: small;">{{getDate(item.dateRaised)}}</p>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                   <div class="row">
+                    type:<p style="margin-top: 0.15rem;margin-left: 0.5rem;font-size:small;">
+                    {{item.type}}
+                   </p>  
+                </div> 
+                </div>
+                <div class="col-sm-3">
+                    <div class="row" *ngIf="item.type==CR">
+                        current date:<p style="margin-top: 0.15rem;margin-left: 0.5rem;font-size: small;">{{getDate(item.currentDate)}}</p>
+                    </div>
+                    <div class="row" *ngIf="item.type==DR">
+                        phase :<p style="margin-top: 0.15rem;margin-left: 0.5rem;font-size: small;">{{item.phase.name}}</p>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row" *ngIf="item.type==CR">
+                        suggested date:<p style="margin-top: 0.15rem;margin-left: 0.5rem;font-size: small;">{{getDate(item.newDate)}}</p>
+                    </div>
+                    <div class="row" *ngIf="item.type==DR">
+                        see File <div style="margin-top: 0.15rem;margin-left: 0.5rem;font-size: small;"><nb-icon icon="arrow-circle-down-outline" (click)="savefile(item.file)"></nb-icon></div>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <button nbButton (click)="openUpdateCR(item)">Decision</button>
+                </div>
+            </div>
+        </nb-card-header>
+    </nb-card>
+    </nb-card-header>
+</nb-card> -->
+
+<ng-template #addHighlightTemplate let-data>
+    <form (ngSubmit)="createHighlight(data.description)">
+        <div class="row">
+          <div class="col-sm-12">
+      <label for="inputProjectName" class="label">Highlight Description</label>
+      <input type="text" nbInput fullWidth id="highlightDescription" name="highlight.description" placeholder="highlight description" [(ngModel)]="data.description">
+      </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-2">
+              <button type="submit" status ="primary" style="margin-left: 1rem;" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+            </div>
+        </div>
+    </form>
+  </ng-template>
+<ng-template #addIssueTemplate let-data>
+    <form (ngSubmit)="createIssue(data.description,data.Status , data.Impact,data.actionPlan)">
+        <div class="row">
+          <div class="col-sm-12">
+      <label for="inputProjectName" class="label">Issue Description</label>
+      <input type="text" nbInput fullWidth id="highlightDescription" name="highlight.description" placeholder="Issue description" [(ngModel)]="data.description">
+      </div>
+        </div>
+        <label class="label"> select Issue and Impact</label>
+
+        <div class="row">
+            <div class="col-sm-6" >
+                <nb-select name="select" placeholder="Status" style="width:15rem" (selectedChange)="selectStatus($event)"> 
+                    <nb-option [value]="1"> opened </nb-option>
+                    <nb-option [value]="2"> under Mitigation </nb-option>
+                    <nb-option [value]="3"> Resolved </nb-option>
+                    </nb-select>
+            </div>
+            <div class="col-sm-4">
+                <nb-select name="select" placeholder="Impact" style="width:15rem" (selectedChange)="selectImpact($event)">  
+                    <nb-option [value]="1"> Low </nb-option>
+                    <nb-option [value]="2"> Meduim </nb-option>
+                    <nb-option [value]="3"> High </nb-option>
+                    </nb-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="inputProjectName" class="label">Issue Action Plan</label>
+                <input type="text" nbInput fullWidth id="issueActionPlan" name="issue.actionPlan" placeholder="Issue action plan" [(ngModel)]="data.actionPlan">
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-2">
+              <button type="submit" status ="primary" style="margin-left: 1rem;" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #addRiskTemplate let-data>
+    <form (ngSubmit)="createRisk(data)">
+        <div class="row">
+          <div class="col-sm-12">
+      <label for="inputProjectName" class="label">Risk Description</label>
+      <input type="text" nbInput fullWidth id="highlightDescription" name="highlight.description" placeholder="Issue description" [(ngModel)]="data.description">
+      </div>
+        </div>
+        <label class="label"> select Status and Impact</label>
+
+        <div class="row">
+            <div class="col-sm-6" >
+                <nb-select name="select" placeholder="Status" style="width:15rem" (selectedChange)="selectRiskStatus($event)"> 
+                    <nb-option [value]="1"> opened </nb-option>
+                    <nb-option [value]="2"> under Mitigation </nb-option>
+                    <nb-option [value]="3"> Resolved </nb-option>
+                    </nb-select>
+            </div>
+            <div class="col-sm-4">
+                <nb-select name="select" placeholder="Impact" style="width:15rem" (selectedChange)="selectRiskImpact($event)">  
+                    <nb-option [value]="1"> Low </nb-option>
+                    <nb-option [value]="2"> Meduim </nb-option>
+                    <nb-option [value]="3"> High </nb-option>
+                    </nb-select>
+            </div>
+        </div>
+        <label class="label">select Probability and Mitigation Date</label>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <label class="label">Risk Mitigation Plan</label>
+                <input type="text" nbInput fullWidth id="riskMitigationPlan" name="risk.mitigationPlan" placeholder="risk mitigation plan" [(ngModel)]="data.MitigationPlan">
+                </div>
+            </div>
+            <div class="row" style="margin-top: 1rem;">
+                <div class="col-sm-6">
+                    <nb-select name="select" placeholder="Impact" style="width:15rem" (selectedChange)="selectRiskProbabilit($event)">  
+                        <nb-option [value]="1"> Low </nb-option>
+                        <nb-option [value]="2"> Meduim </nb-option>
+                        <nb-option [value]="3"> High </nb-option>
+                        </nb-select>
+                    </div>
+                    <div class="col-sm-6">
+                        <nb-card>
+                            <input nbInput placeholder="Pick Mitigation Date" name="data.targetMitigationDate" [nbDatepicker]="dateTimePicker" [(ngModel)]="data.targetMitigationDate"  >
+                            <nb-date-timepicker
+                              #dateTimePicker
+                              singleColumn
+                              [step]="10" ></nb-date-timepicker>
+                          </nb-card>
+                    </div>
+                </div>
+        <div class="row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-2">
+              <button type="submit" status ="primary" style="margin-left: 1rem;" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #addDependencyTemplate let-data>
+    <form (ngSubmit)="createDependency(data)">
+        <div class="row">
+          <div class="col-sm-12">
+      <label for="inputProjectName" class="label">dependency Description</label>
+      <input type="text" nbInput fullWidth id="dependencyDescription" name="risk.description" placeholder="Dependency description" [(ngModel)]="data.description">
+      </div>
+        </div>
+        <label class="label"> select Status and Bound</label>
+
+        <div class="row">
+            <div class="col-sm-6" >
+                <nb-select name="select" placeholder="Status" style="width:15rem" (selectedChange)="selectDependencyStatus($event)"> 
+                    <nb-option [value]="1"> identified </nb-option>
+                    <nb-option [value]="2"> monitored </nb-option>
+                    <nb-option [value]="3"> closed </nb-option>
+                    </nb-select>
+            </div>
+            <div class="col-sm-4">
+                <nb-select name="select" placeholder="Bound" style="width:15rem" (selectedChange)="selectDependencyBound($event)">  
+                    <nb-option [value]="1"> InBound </nb-option>
+                    <nb-option [value]="2"> OutBound </nb-option>
+                    </nb-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-2">
+              <button type="submit" status ="primary" style="margin-left: 1rem;" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #addAssumptionTemplate let-data>
+    <form (ngSubmit)="createAssumption(data.description)">
+        <div class="row">
+          <div class="col-sm-12">
+      <label for="inputProjectName" class="label">assumption Description</label>
+      <input type="text" nbInput fullWidth id="dependencyDescription" name="assumption.description" placeholder="assumption description" [(ngModel)]="data.description">
+      </div>
+        </div>
+        <label class="label"> Assumption Status</label>
+        <div >
+        <nb-select  name="select" placeholder="Status" (selectedChange)="selectAssumptionStatus($event)"> 
+                    <nb-option [value]="1"> opened </nb-option>
+                    <nb-option [value]="2"> closed </nb-option>
+                    </nb-select>
+                </div>
+        <div class="row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-2">
+              <button type="submit" status ="primary" style="margin-left: 1rem;" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #popoverTemplate  >
+
+<nb-card>
+    <nb-card-header style="background-color: bisque;">
+        <div class="row">
+            <div class="col-sm-8">
+                {{details.__typename}} added by
+            </div>
+                <nb-user class="col-sm-2"
+                picture="assets/images/{{details.user.image}}"
+                name="{{details.user.name}}">
+                </nb-user>
+        </div>
+    </nb-card-header>
+<table class="table">
+<tr>
+    <th>
+        description
+    </th>
+    <td>
+        {{details.description}}
+    </td>
+</tr>
+<tr *ngIf="details.status">
+    <th>
+        status
+    </th>
+    <td>
+        {{details.status}}
+    </td>
+</tr>
+<tr>
+    <th>
+        dateRaised
+    </th>
+    <td>
+        {{details.dateRaised}}
+    </td>
+</tr>
+<tr *ngIf="details.inOutBound">
+    <th>
+        bound
+    </th>
+    <td>
+        {{details.inOutBound}}
+    </td>
+</tr>
+<tr *ngIf="details.RiskStatus">
+    <th>
+        bound
+    </th>
+    <td>
+        {{details.RiskStatus}}
+    </td>
+</tr>
+<tr *ngIf="details.impact">
+    <th>
+        impact
+    </th>
+    <td>
+        {{details.impact}}
+    </td>
+</tr>
+<tr *ngIf="details.probability">
+    <th>
+        probability
+    </th>
+    <td>
+        {{details.probability}}
+    </td>
+</tr>
+<tr *ngIf="details.targetMitigationDate">
+    <th>
+        targetMitigationDate
+    </th>
+    <td>
+        {{getDate(details.targetMitigationDate)}}
+    </td>
+</tr>
+<tr *ngIf="details.MitigationPlan">
+    <th>
+        MitigationPlan
+    </th>
+    <td>
+        {{details.MitigationPlan}}
+    </td>
+</tr>
+<tr *ngIf="details.actionPlan">
+    <th>
+        actionPlan
+    </th>
+    <td>
+        {{details.actionPlan}}
+    </td>
+</tr>
+</table>
+</nb-card>
+</ng-template>
+<ng-template #addTaskTemplate let-data>
+    <form (ngSubmit)="createTask(data)">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="label">select User </label>
+                <nb-select name="select" placeholder="user" style="width:15rem"  (selectedChange)="selectUser($event)"> 
+                    
+                    <nb-option *ngFor="let item of data.developers" [value]="item.id"> {{item.name}} </nb-option>
+                </nb-select>        
+            </div>
+            <div class="col-sm-4" >
+                <label class="label">select status</label>
+                <nb-select name="selectStatus" placeholder="Status" style="width:15rem"  (selectedChange)="selectTaskStatus($event)">  
+                    <nb-option [value]="1"> new </nb-option>
+                    <nb-option [value]="2"> in progression </nb-option>
+                    <nb-option [value]="3"> done </nb-option>
+                </nb-select>
+            </div>
+          </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="label"> add a start Date</label>
+                    <input nbInput placeholder=" Task start Date" name="data.startDate" [nbDatepicker]="startDateTimePicker" [(ngModel)]="data.startDate"  >
+                    <nb-date-timepicker
+                      #startDateTimePicker
+                      singleColumn
+                      [step]="10" ></nb-date-timepicker>
+                </div>
+                <div class="col-sm-4">
+                    <label class="label"> add an end Date</label>
+                        <input nbInput placeholder="Task end Date" name="data.endDate" [nbDatepicker]="endDateTimePicker" [(ngModel)]="data.endDate"  >
+                        <nb-date-timepicker
+                          #endDateTimePicker
+                          singleColumn
+                          [step]="10" ></nb-date-timepicker>
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="inputTaskBudget" class="label">Task Budget</label>
+                        <input type="number" nbInput fullWidth id="inputTaskBudget" name="inputTaskBudget" placeholder="Task Budget" [(ngModel)]="data.budget">
+                    </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-11">
+            <label for="inputProjectName" class="label">Task Description</label>
+            <textarea type="text" nbInput fullWidth id="taskDescription" name="task.description" aria-required="true" fieldSize="giant" placeholder="task description" [(ngModel)]="data.description"></textarea>
+            </div>
+              </div>
+        <div class="row">
+            <div class="col-sm-9"></div>
+            <div class="col-sm-2">
+              <button type="submit" status ="primary" style="margin-left: 1rem;" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #popoverTaskTemplate >
+
+    <nb-card>
+        <nb-card-header style="background-color: bisque;">
+            <div class="row">
+                <nb-user class="col-sm-4"
+                picture="assets/images/{{taskDetails.user.image}}"
+                name="{{taskDetails.user.name}}"
+                >
+                </nb-user>   
+            </div>
+        </nb-card-header>
+    <table class="table">
+    <tr>
+        <th>
+            description
+        </th>
+        <td>
+            {{taskDetails.description}}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            status
+        </th>
+        <td>
+            {{taskDetails.status}}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            dateRaised
+        </th>
+        <td>
+            {{getDate(taskDetails.dateRaised)}}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            start date
+        </th>
+        <td>
+            {{getDate(taskDetails.startDate)}}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            end date
+        </th>
+        <td>
+            {{getDate(taskDetails.endDate)}}
+        </td>
+    </tr>
+    </table>
+    </nb-card>
+</ng-template>
+<ng-template #addMeetingTemplate let-data>
+    <form (ngSubmit)="createMeeting(data)" style="width: 35rem;">
+        <div class="row">
+            <div class="col-md-6">
+                <label class="label" for="data.subject">meeting subject </label>
+                <input type="text" nbInput placeholder=" Meeting subject" name="data.subject" [(ngModel)]="data.subject"  >
+            </div>
+            <div class="col-md-6">
+                <label class="label" for="data.duration">meeting duration</label>
+                <input nbInput placeholder=" Meeting duration" name="data.duration" [(ngModel)]="data.duration"  >
+            </div>
+          </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="label"> add meeting Date</label>
+                    <input nbInput placeholder=" meeting start Date" name="data.startDate" [nbDatepicker]="startDateTimePicker" [(ngModel)]="data.startDate"  >
+                    <nb-date-timepicker
+                      #startDateTimePicker
+                      singleColumn
+                      [step]="10" ></nb-date-timepicker>
+                </div>
+                    <div class="col-md-6">
+                        <label for="inputTaskBudget" class="label">Meeting Location</label>
+                        <input type="text" nbInput fullWidth id="inputTaskBudget" name="inputTaskBudget" placeholder="Meeting Location" [(ngModel)]="data.location">
+                    </div>
+        </div>
+        <label class="label" for="users" style="margin-top: 1rem;"> select Meeting guests</label>
+        <div fxLayout="row wrap">
+            <div fxFlex="30%" *ngFor="let guest of guests">
+                <nb-checkbox name="users" (checkedChange)="toggle(guest)">{{guest.user.name}}</nb-checkbox>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+              <button type="submit" status ="primary" style="margin-left: 1rem;" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #updateMeetingTemplate let-data>
+    <form (ngSubmit)="updateMeeting(data.data)" style="width: 35rem;" [ngFormOptions]="{updateOn: 'blur'}">
+        <div class="row">
+            <div class="col-md-6">
+                <label class="label" for="data.subject">meeting subject </label>
+                <input type="text" nbInput placeholder=" Meeting subject" name="data.subject" [(ngModel)]="data.data.subject"  >
+            </div>
+            <div class="col-md-6">
+                <label class="label" for="data.duration">meeting duration</label>
+                <input nbInput placeholder=" Meeting duration" name="data.duration" [(ngModel)]="data.data.duration"  >
+            </div>
+          </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="label"> add meeting Date</label>
+                    <input nbInput placeholder="{{data.data.date}}" name="data.startDate" [nbDatepicker]="updateDateTimePicker" [(ngModel)]="data.data.startDate"  >
+                    <nb-date-timepicker
+                      #updateDateTimePicker
+                      singleColumn
+                      [step]="10" ></nb-date-timepicker>
+                </div>
+                    <div class="col-md-6">
+                        <label for="inputTaskBudget" class="label">Meeting Location</label>
+                        <input type="text" nbInput fullWidth id="inputTaskBudget" name="inputTaskBudget" placeholder="Meeting Location" [(ngModel)]="data.data.location">
+                    </div>
+        </div>
+        <label class="label" for="users" style="margin-top: 1rem;"> select Meeting guests</label>
+        <div fxLayout="row wrap">
+            <div fxFlex="30%" *ngFor="let guest of updateMeetingGuests">
+                <nb-checkbox name="users" (checkedChange)="updateToggle(guest)" [checked]="guest.checked">{{guest.user.name}}</nb-checkbox>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+              <button type="submit" status ="primary" style="margin-left: 1rem;" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #updateTaskTemplate let-data>
+    <form (ngSubmit)="addChangeRequest(data)" style="width: 35rem;" [ngFormOptions]="{updateOn: 'blur'}">
+        <div class="row">
+            <div class="col-sm-2">
+                description
+            </div>
+            <div class="col-sm-6">
+                data.description
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="label"> add meeting Date</label>
+                    <input nbInput placeholder="{{data.data.date}}" name="data.startDate" [nbDatepicker]="startDateTimePicker" [(ngModel)]="data.data.startDate"  >
+                    <nb-date-timepicker
+                      #startDateTimePicker
+                      singleColumn
+                      [step]="10" ></nb-date-timepicker>
+                </div>
+                <div class="col-md-6">
+                    <label class="label"> add meeting Date</label>
+                        <input nbInput placeholder="{{data.data.date}}" name="data.startDate" [nbDatepicker]="endDateTimePicker" [(ngModel)]="data.data.startDate"  >
+                        <nb-date-timepicker
+                          #endDateTimePicker
+                          singleColumn
+                          [step]="10" ></nb-date-timepicker>
+                    </div>
+        </div>
+        <label class="label" for="users" style="margin-top: 1rem;"> select Meeting guests</label>
+        <div fxLayout="row wrap">
+            <div fxFlex="30%" *ngFor="let guest of updateMeetingGuests">
+                <nb-checkbox name="users" (checkedChange)="updateToggle(guest)" [checked]="guest.checked">{{guest.user.name}}</nb-checkbox>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+              <button type="submit" status ="primary" style="margin-left: 1rem;" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #CRrequestTemplate let-data>
+    <form (ngSubmit)="createCR(data)"  [ngFormOptions]="{updateOn: 'blur'}">
+        <div class="row">
+            <div class="col-sm-4">
+            <label class="label">
+                current Date :</label>
+            </div>
+            <div class="col-sm-6">
+                {{getDate(data.currentDate)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="label"> add meeting Date</label>
+                </div>
+            <div class="col-sm-6">
+                <input nbInput placeholder="add a new date" name="data.newDate" [nbDatepicker]="startDateTimePicker" [(ngModel)]="data.newDate"  >
+                    <nb-date-timepicker
+                      #startDateTimePicker
+                      singleColumn
+                      [step]="10" ></nb-date-timepicker>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+              <button type="submit" status ="primary" style="margin-left: 1rem;" nbButton style="margin-top: 1rem;" >SUBMIT</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #updateCRTemplate let-data>
+    <form [ngFormOptions]="{updateOn: 'blur'}">
+        <div *ngIf="data.type==CR">
+        <div class="row">
+            <div class="col-md-6">
+            <label class="label">
+                current Date :</label>
+            </div>
+            <div class="col-md-6">
+                {{getDate(data.currentDate)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+            <label class="label">
+                suggested Date :</label>
+            </div>
+            <div class="col-md-6">
+                {{getDate(data.newDate)}}
+            </div>
+        </div>
+    </div>
+        <div class="row">
+            <label class="label" for="data.note" style="margin-left: 1rem;"> add note</label>
+            <div class="col-md-12">
+                <textarea type="text" nbInput placeholder=" Decision note"  name="data.note" [(ngModel)]="data.note"  ></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-8">
+                <div class="row">  
+                <button  class="col-sm-5" status ="warning" size="small" nbButton style="margin-top: 1rem;margin-right: 0.5rem;" (click)="declineCR(data)" >decline</button>
+                <button  class="col-sm-5" status ="primary" style="margin-left: 1rem;" nbButton size="small" style="margin-top: 1rem;" (click)="acceptCR(data)" >Accept</button>
+            </div>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #createDRTemplate let-data>
+    <form  [ngFormOptions]="{updateOn: 'blur'}" >
+            <label class="label" style="margin-left: 1rem;">attach a File</label>
+            <div class="col-md-6">
+                    <input #fileInput nbInput type="file" (change)="upload($event)">
+            </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+                <div class="row">  
+                <button status ="primary" style="margin-left: 1rem;" nbButton size="small" style="margin-top: 1rem;" (click)="createDR(data)" >Make DR</button>
+            </div>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #createMeetDecisionTemplate let-data>
+    <form  [ngFormOptions]="{updateOn: 'blur'}" >
+        <label class="label" style="margin-left: 1rem;">Decision name</label>
+            <div class="col-md-6">
+                    <input nbInput type="text" name="decisonName" [(ngModel)]="data.name">
+            </div>
+            <label class="label" style="margin-left: 1rem;">attach a File</label>
+            <div class="col-md-6">
+                    <input #fileInput multiple nbInput type="file" (change)="uploadDecision($event)">
+            </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+                <div class="row">  
+                <button status ="primary" style="margin-left: 1rem;" nbButton size="small" style="margin-top: 1rem;" (click)="makeDecision(data.name,data.meetID)" >Make Decision</button>
+            </div>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #addReportTemplate let-data>
+    <form  [ngFormOptions]="{updateOn: 'blur'}" >
+            <label class="label" style="margin-left: 1rem;">attach a File</label>
+            <div class="col-md-6">
+                    <input #fileInput nbInput type="file" (change)="uploadReportEvent($event)">
+            </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+                <div class="row">  
+                <button status ="primary" style="margin-left: 1rem;" nbButton size="small" style="margin-top: 1rem;" (click)="uploadReport()" >Make DR</button>
+            </div>
+            </div>
+        </div>
+    </form>
+</ng-template>

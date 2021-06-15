@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
-
+import * as io from 'socket.io-client'
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
@@ -9,7 +9,9 @@ import { Router } from '@angular/router';
 import { AppState } from '../../../@core/auth/ngrx-auth/appState';
 import { Store } from '@ngrx/store';
 import { currentUserSelector } from '../../../@core/auth/ngrx-auth/auth.reducers';
-import { GetUserAction } from '../../../@core/auth/ngrx-auth/auth.actions';
+import { GetUserAction, SaveUserAction } from '../../../@core/auth/ngrx-auth/auth.actions';
+import { NotificationService } from '../../../@core/services/notification.service';
+import { LoginService } from '../../../@core/auth/login/login.service';
 
 @Component({
   selector: 'ngx-header',
@@ -17,10 +19,11 @@ import { GetUserAction } from '../../../@core/auth/ngrx-auth/auth.actions';
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
+  newRole = true;
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   user: any;
+  newnotif : boolean = false
   png ;
 
   themes = [
@@ -45,7 +48,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentTheme = 'default';
 
   userMenu = [ ];
-
+  subject;
+  notifications ; 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private themeService: NbThemeService,
@@ -53,24 +57,31 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
               private router: Router,
-              private store : Store<AppState>) {
+              private notificationService : NotificationService,
+              private store : Store<AppState> ,
+              private _router: Router,
+              private _auth : LoginService) {
   }
- logout(){localStorage.clear();
+ logout(){
+  this.subject.emit('deconnect', this.user) 
+  localStorage.clear();
   this.router.navigate(['/login'])   }
   ngOnInit() {
+
     this.currentTheme = this.themeService.currentTheme;
     this.store.dispatch(new GetUserAction)
     this.store.select(currentUserSelector).subscribe((data : any)=>{
+      console.log("dataaaaaaa", data)
       this.user=data.user
       this.png="assets/images/"+data.user.image ;
-      console.log("user",this.user)
-      
+      this.notificationService.getNotificationByUser(data.user.id).subscribe((notifications: any)=>{
+      notifications.data.getNotificationByUser.forEach(element => {
+        if(!element.seen){
+          // this.newnotif=true
+        }
+      });
     })
-    // this.userService.getUsers()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((users: any) => {this.user = users.nick
-    //   console.log("user",this.user)});
-
+    })
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
       .pipe(
@@ -85,6 +96,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe(themeName => this.currentTheme = themeName);
+
+      this.subject = io("http://localhost:3001");
+      this.subject.emit('conection', this.user)
+      this.subject.on('notification', data=>{
+        this.newnotif  = true
+        console.log("bbbb")
+        // this.notificationService.getNotificationByUser(this.user.id).subscribe((data: any)=>{
+        //   this.notifications = data.data.getNotificationByUser;
+        // })
+      })
+      this.subject.on('roleUpdated',(data)=>{
+        this.store.dispatch(new SaveUserAction(this._auth.getUser(data)))
+           this.store.select((state)=>state).subscribe((res)=>{
+            this.newRole=!this.newRole;           
+          });  
+      })
   }
 
   ngOnDestroy() {
@@ -106,5 +133,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+  openNotifications(){
+    this.newnotif=false
+    this._router.navigate(['/pages/notification/notification' ])
   }
 }

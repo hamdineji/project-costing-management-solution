@@ -35,6 +35,7 @@ permission:any ;
   getUser(token:string ){
 
     this.permission= (jwt_decode(token));
+    console.log("user", this.permission)
     return this.permission;
   }
   // getId(){

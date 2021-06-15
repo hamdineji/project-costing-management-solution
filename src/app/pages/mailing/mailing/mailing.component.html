@@ -1,1 +1,28 @@
-<p>mailing works!</p>
+<nb-card>
+    <nb-card-header>
+      <div style="text-align: center;">
+      </div>
+      <div class="row">
+       <div class="col-sm-1">
+        Mailing
+       </div> 
+        <input type="text"  style="margin-left: 1rem; margin-right: 1rem ; margin-top: 1rem;" nbInput fullWidth  name="to" placeholder="to : " [(ngModel)]="to" >
+      </div>
+      
+    </nb-card-header>
+
+    <nb-card-body>
+      <div class="row">
+        <input type="text"  style="margin-left: 1rem; margin-right: 1rem; margin-bottom: 0.5rem;" nbInput fullWidth  name="object" placeholder="add object" [(ngModel)]="object" >
+      </div>
+        <ckeditor [(ngModel)]="mail" [config]="{  allowedContent: false,
+          forcePasteAsPlainText: true}"></ckeditor>
+    </nb-card-body>
+    <div class="row" style="margin-bottom: 0.5rem;">
+  <div class="col-sm-11">
+
+  </div>
+      <button  nbButton (click)="sendMail()" status="primary">send</button>
+    </div>
+  </nb-card>
+  <!-- <ngx-ckeditor></ngx-ckeditor> -->

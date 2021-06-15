@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbMenuModule } from '@nebular/theme';
+import { NbMenuModule, NB_TIME_PICKER_CONFIG } from '@nebular/theme';
 import{UsersModule} from './users/users.module'
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
@@ -16,6 +16,8 @@ import { LogsModule } from './logs/logs.module';
 import { NotificationModule } from './notification/notification.module';
 import { MailingModule } from './mailing/mailing.module';
 import { FacturationModule } from './facturation/facturation.module';
+import { EditorsModule } from './editors/editors.module';
+import { ReportsModule } from './reports/reports.module';
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -32,11 +34,18 @@ import { FacturationModule } from './facturation/facturation.module';
     LogsModule,
     NotificationModule,
     MailingModule,
-    FacturationModule , 
+    FacturationModule,
+    ReportsModule 
+    // EditorsModule
   ],
   declarations: [
     PagesComponent,
   ],
+  providers :[{
+    provide:NB_TIME_PICKER_CONFIG,
+    useValue:{}
+    }]
+ 
 })
 export class PagesModule {
 }

@@ -32,7 +32,8 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbButtonModule,
     NbInputModule,
     NbCheckboxModule,
-    NbUserModule
+    NbUserModule,
+    NbListModule
   ],
 })
 export class TasksModule { }

@@ -12,6 +12,7 @@ import {
   NbSelectModule,
   NbIconModule,
   NbThemeModule,
+  NbBadgeModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { NbSecurityModule } from '@nebular/security';
@@ -39,6 +40,8 @@ import { COSMIC_THEME } from './styles/theme.cosmic';
 import { CORPORATE_THEME } from './styles/theme.corporate';
 import { DARK_THEME } from './styles/theme.dark';
 import { IfPermissionDirective } from './directives/permissionDirectives';
+import { RouterModule } from '@angular/router';
+import { IfDepartementPermissionDirective } from './directives/departementPermissionDirective';
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -52,6 +55,7 @@ const NB_MODULES = [
   NbButtonModule,
   NbSelectModule,
   NbIconModule,
+  NbBadgeModule,
   NbEvaIconsModule,
 ];
 const COMPONENTS = [
@@ -69,11 +73,12 @@ const PIPES = [
   RoundPipe,
   TimingPipe,
   NumberWithCommasPipe,
-  IfPermissionDirective
+  IfPermissionDirective,
+  IfDepartementPermissionDirective
 ];
 
 @NgModule({
-  imports: [CommonModule, ...NB_MODULES],
+  imports: [RouterModule,CommonModule, ...NB_MODULES],
   exports: [CommonModule, ...PIPES, ...COMPONENTS],
   declarations: [...COMPONENTS, ...PIPES ],
 })

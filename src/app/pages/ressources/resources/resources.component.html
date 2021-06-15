@@ -1,1 +1,240 @@
-<p>resources works!</p>
+<h2 style="text-align: center;">
+    Proxym Ressources
+</h2> 
+
+<nb-card>
+     <div  fxLayout="row wrap" style="margin-top: 1rem;">
+         <div  fxFlex="45%" style="margin-left: 2rem;" *ngFor="let item of users">
+        <nb-card>
+            <nb-card-header style="position: relative;">
+                <nb-badge text="available" position="top right" status="success" *ngIf="showBadge(item.tasks,item.vacation,item.absences)"></nb-badge>
+                <div class="row" style="margin-top: 0.5rem;">
+                    
+                    <div class="col-sm-4">
+            <nb-user 
+                name=""
+                picture ="assets/images/{{item.image}}" >
+            </nb-user>
+        </div>
+        <div class="col-sm-5">
+            {{item.name}}
+        </div>
+        <div>
+            <button nbButton size="tiny" (click)="showUserChart(item.name,item.tasks,item.vacation,item.absences)" [nbPopover]="popoverDisponibilityTemplate"> show availability 
+                <nb-icon icon="diagonal-arrow-right-up-outline">
+            </nb-icon></button>
+        </div>
+        </div>
+            </nb-card-header>
+            <table class="table">
+                <th>
+                    departement
+                </th>
+                <td style="text-align: center;">
+                    {{item.departement.name}}
+                </td>
+                <tr>
+                <th>
+                    absences
+                </th>
+                <td style="text-align: center;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                        </div>
+                    <div class="col-sm-4">
+                        <div *ngIf="item.absences==null"> 0</div>
+                        <div *ngIf="item.absences!=null">
+                            {{item.absences.length}}
+                        </div>
+                    </div>
+                        <button nbButton size="tiny" (click)="addAbsence(item.id)" [nbPopover]="AddAbsenceTemplate"><nb-icon icon="plus-outline"> </nb-icon></button>
+                </div>
+
+                </td>
+            </tr>
+                <tr>
+                    <th>
+                        vacations 
+                    </th>
+                    <td style="text-align: center;">
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <div *ngIf="item.vacation==null"> 0</div>
+                                <div *ngIf="item.vacation!=null">                                 {{item.vacation.length}} 
+                                </div>
+                            </div>
+                                <button nbButton size="tiny" (click)="selectUser(item.id)" [nbPopover]="popoverAddVacationTemplate"><nb-icon icon="plus-outline"> </nb-icon></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Projects
+                    </th>
+                    <td style="text-align: center;">
+                        <div class="row"> 
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4"> {{item.projects.length}} </div>
+                        <button nbButton nbTooltip="projects List" size="tiny" (click)="openProjectList(item.projects)"> <nb-icon icon="list-outline"></nb-icon></button>
+                    </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Tasks
+                    </th>
+                    <td style="text-align: center;">
+                        <div class="row"> 
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">  {{item.tasks.length}} </div>
+                            <button nbButton nbTooltip="projects List" size="tiny" (click)="openTaskList(item.id)" > <nb-icon icon="list-outline"></nb-icon></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        salary
+                    </th>
+                    <td style="text-align: center;">
+                        {{item.salary}}
+                    </td>
+                </tr>
+
+            </table>
+        </nb-card>
+     </div>
+    </div>
+</nb-card>
+<ng-template #popoverDisponibilityTemplate >
+    <highcharts-chart [Highcharts] = "highcharts"    [constructorType]="'ganttChart'" 
+    [options] = "chartOptions">
+    </highcharts-chart>
+    </ng-template>
+<ng-template #popoverAddVacationTemplate>
+    <nb-card>
+        <nb-card-body>
+          <nb-calendar-range [(range)]="dateRange"></nb-calendar-range>
+          <button nbButton (click)="addVacation()"> add Vacation</button>
+        </nb-card-body>
+      </nb-card>
+</ng-template>
+<ng-template #AddAbsenceTemplate>
+    <nb-card>
+        <nb-card-body>
+          <nb-calendar [(date)]="date" showWeekNumber="true"></nb-calendar>
+        </nb-card-body>
+        <button nbButton (click)="addUserAbsence()">add Absence</button>
+      </nb-card>
+</ng-template>
+<ng-template #ProjectList let-ref="dialogRef">
+<nb-card style="width: 70rem;">
+<nb-card-header style="text-align: center;"> List Of Projects</nb-card-header>
+
+<nb-card-header *ngFor="let p of userProjects">
+<div class="row" >
+    <div class="col-sm-1">
+<nb-icon icon="briefcase-outline"></nb-icon>
+    </div>
+<div class="col-sm-3">
+    <div class="row">
+        name : 
+        <p style="margin-top:0.2rem ; margin-left: 0.3rem;">
+            {{ p.name}}
+        </p> 
+    </div>
+</div>
+<div class="col-sm-2">
+        <nb-progress-bar [value]="p.progress" status="info"></nb-progress-bar>
+</div>
+<div class="col-sm-2">
+    <div class="row">
+        addedAt : 
+        <p style="margin-top:0.2rem ; margin-left: 0.3rem;">
+03/05/2021        </p> 
+    </div>
+</div>
+<div class="col-sm-3">
+    <div class="row">
+        forecasted Date 
+        <p style="margin-top:0.2rem ; margin-left: 0.3rem;">
+10/08/2021        </p> 
+    </div>
+</div>
+<div class="col-sm-1">
+ <button nbButton nbTooltip="project Details" size="small" [routerLink]="['../../projects/project-details']" (click)="openProjectDetails(p.id) ; ref.close()">
+    <nb-icon icon="diagonal-arrow-right-up-outline"></nb-icon>
+ </button>
+</div>
+</div>
+</nb-card-header>
+<nb-card-header>
+    <div class="row">
+        <div class="col-sm-11">
+
+        </div>
+        <button nbButton (click)="ref.close()" size="small" >close </button>
+    </div>
+</nb-card-header>
+</nb-card>
+</ng-template>
+<ng-template #TasksList let-ref="dialogRef">
+    <nb-card  style="width: 70rem;">
+        <nb-card-header style="text-align: center;">
+            user Tasks
+        </nb-card-header>
+        <nb-card-header *ngFor="let task of userTasks">
+            <div class="row">
+                <div class="col-sm-1">
+                    <nb-icon icon="award-outline">
+                    </nb-icon>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        Task's project 
+                        <p style="margin-top: 0.2rem; margin-left: 0.3rem;">
+                            {{task.project.name}}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="row">
+                        startDate 
+                        <p style="margin-top: 0.2rem; margin-left: 0.3rem;">
+                            {{getDate(task.startDate)}}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                   <div class="row">
+                    endDate 
+                    <p style="margin-top: 0.2rem; margin-left: 0.3rem;">
+                        {{getDate(task.endDate)}}
+                    </p>
+                   </div>
+                </div>
+                <div class="col-sm-2">
+                   <div class="row">
+
+                    status 
+                    <p style="margin-top: 0.2rem; margin-left: 0.3rem;">{{ task.status}}</p>
+                    <div style="margin-left: 0.3rem;">
+                    <nb-icon icon="bulb-outline" *ngIf="task.status=='new'" style="color: crimson;"></nb-icon>
+                    <nb-icon icon="activity-outline" *ngIf="task.status=='in progress'" style="color: mediumseagreen;"></nb-icon>
+                    <nb-icon icon="checkmark-outline" *ngIf="task.status=='done'" style="color: darkblue;"></nb-icon>
+                </div>
+            </div>
+            </div>
+
+            </div>
+        </nb-card-header>
+        <nb-card-header>
+            <div class="row">
+                <div class="col-sm-11">
+
+                </div>
+                <button nbButton size="small" (click)="ref.close()">close</button>
+            </div>
+        </nb-card-header>
+    </nb-card>
+</ng-template>

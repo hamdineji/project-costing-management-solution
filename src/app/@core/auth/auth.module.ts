@@ -8,7 +8,7 @@ import { NbAuthModule } from '@nebular/auth';
 import {
   NbAlertModule,
   NbButtonModule,
-  NbCheckboxModule, NbIconModule,
+  NbCheckboxModule, NbFormFieldModule, NbIconModule,
   NbInputModule
 } from '@nebular/theme';
 import {NgxLoginComponent} from "./login/login.component";
@@ -58,6 +58,7 @@ const metaReducers: Array<MetaReducer<any, any>> = [persistStateReducer];
     NbIconModule,
     NbAlertModule,
     HttpClientModule,
+    NbFormFieldModule,
     StoreModule.forFeature('auth',AuthReducer , {initialState,metaReducers})
   ],
   declarations: [

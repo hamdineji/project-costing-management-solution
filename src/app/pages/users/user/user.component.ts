@@ -9,6 +9,7 @@ import { AppState } from '../../../@core/auth/ngrx-auth/appState';
 import { currentUserSelector } from '../../../@core/auth/ngrx-auth/auth.reducers';
 import { GetUserAction } from '../../../@core/auth/ngrx-auth/auth.actions';
 import { DepartementService } from '../../../@core/services/departements.service';
+import { ProjectService } from '../../../@core/services/projects.service';
 @Component({
   selector: 'ngx-user',
   templateUrl: './user.component.html',
@@ -31,22 +32,28 @@ export class UserComponent implements OnInit, OnDestroy {
   updateRoleWindow:NbWindowRef;
   updateUserWindow:NbWindowRef;
   addRoleWindow : NbWindowRef;
+  assignProjectsWindow : NbWindowRef;
   addRoledata;
   categoryRolePermissions = [];
   categoryUserPermissions=[];
   categoryDepPermissions;
   categoryProjectPermissions=[];
-
+  projects
   currentUserPermission=[];
+  backendProjects = [];
+  frontendProjects = []
+  mobileprojects = [];
+  bankeriseProjects = [];
   @ViewChild('updateRoleTemplate') updateRoleTemplate: TemplateRef<any>;
   @ViewChild('updateUserTemplate') updateUserTemplate: TemplateRef<any>;
   @ViewChild('addRoleTemplate') addRoleTemplate: TemplateRef<any>;
+  @ViewChild('assignProjectTemplate') assignProjectTemplate: TemplateRef<any>;
 
   constructor(private themeService: NbThemeService , 
      private windowService: NbWindowService ,
      private userService : UserService ,
      private roleService : RoleService ,
-     private departementService : DepartementService,
+     private projectService :  ProjectService,
      private permissionService : PermissionService ,
      private store : Store<AppState>
      ) { 
@@ -54,15 +61,12 @@ export class UserComponent implements OnInit, OnDestroy {
           this.currentTheme = theme.name;  });
    }
     ngOnInit(){
+      this.projectService.getAllProjects().subscribe((res :any )=>{
+        this.projects = res.data.getAllProjects;
+      })
       this.store.dispatch(new GetUserAction)
       this.store.select(currentUserSelector).subscribe((data : any)=>{
-      this.roleService.getRoleByID(data.role).subscribe((data:any)=>{
-
-     data.data.getRoleById.permissions.forEach(value => {
-       this.permissionService.getPermissionById(value).subscribe((data:any)=>
-       {this.currentUserPermission.push(data.data.getPermissionById.name)})
-     
-    })})});
+  });
    this.getData();
   }
   getData() {
@@ -74,58 +78,42 @@ export class UserComponent implements OnInit, OnDestroy {
           if(element.role==null){
             this.users[index].role="not yet Defined"
           }
-          else{
-          this.roleService.getRoleByID(element.role).subscribe((data:any)=>
-          
-          this.users[index].role=data.data.getRoleById.name
-          )}
-          console.log("element.departement", element.departement)
         if(element.departement ==null){
           this.users[index].departement="not yet Defined"
         }
-        else{
-          this.departementService.getDepartementById(element.departement).subscribe((res : any)=>{
-            console.log("departement",res.data.getDepartementById)
-            this.users[index].departement=res.data.getDepartementById.name;
-          })
-        }
+    
       });
     });
     this.roleService.getRoles().subscribe((data : any)=>{this.roles=data.data.getAllRoles ;
       var rolesData =[];
     this.roles.forEach((value) => {
-      var rolesManagementPermissions ;
-        rolesManagementPermissions=[] ;
-      var usersManagementPermissions ;
-      usersManagementPermissions=[]
+       var rolesManagementPermissions=[] ;
+      var usersManagementPermissions =[] ;
       var projectManagementPermissions=[] ;
       var DepartementManagementPermissions=[] ;
 
-      value.permissions.forEach((permissionId)=>{
-        var permission 
-        this.permissionService.getPermissionById(permissionId).subscribe((data:any)=> {permission = data.data.getPermissionById.name ;
-          switch(data.data.getPermissionById.category){ 
+      value.listOfPermissions.forEach((element)=>{
+          switch(element.category){ 
             case "Roles management" : {
-              rolesManagementPermissions.push(permission) ; 
+              rolesManagementPermissions.push(element) ; 
               break ;
             }
-            case "user management" : {
-              usersManagementPermissions.push(permission);
+            case "Users management" : {
+              usersManagementPermissions.push(element);
               break ;
             }
-            case "project management" : {
-              projectManagementPermissions.push(permission);
+            case "Request Management" : {
+              projectManagementPermissions.push(element);
               break ;
             }
             case "Departement management" : {
-              DepartementManagementPermissions.push(permission);
+              DepartementManagementPermissions.push(element);
               break ;
             }
           }
         
         })
-      })
-      rolesData.push({role : value.name , rolesManagementPermissions : rolesManagementPermissions,
+        rolesData.push({role : value.name , rolesManagementPermissions : rolesManagementPermissions,
         usersManagementPermissions : usersManagementPermissions ,
         projectManagementPermissions:projectManagementPermissions,
         DepartementManagementPermissions:DepartementManagementPermissions,
@@ -137,6 +125,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   openAddRoleForm() {
+    this.roleName=""
       this.permissionService.getPermissions().subscribe((data : any)=> {this.allPermissions=data.data.getAllPermission;
       this.addRoledata=[];
       this.categoryRolePermissions=[] ; 
@@ -147,8 +136,17 @@ export class UserComponent implements OnInit, OnDestroy {
         this.categoryRolePermissions.push(value);
       break;
       } 
-      case "user management" : {
+      case "Users management" : {
         this.categoryUserPermissions.push(value);
+        break;
+      } 
+      case "Departement management" : {
+        this.categoryDepPermissions.push(value);
+        break;
+      } 
+      case "Request Management" : {
+        this.categoryProjectPermissions.push(value);
+        break;
       } 
     }
     })
@@ -164,16 +162,18 @@ export class UserComponent implements OnInit, OnDestroy {
       this.categoryProjectPermissions=[];
 
 
-      this.roleService.getRoleByID(id).subscribe((data: any)=>{this.rolePermissions=data.data.getRoleById.permissions; this.roleName=data.data.getRoleById.name ;  
-      this.permission.forEach((value)=>{
-        if (this.rolePermissions.indexOf(value.id.toString())!=-1){
+      this.roleService.getRoleByID(id).subscribe((data: any)=>{this.rolePermissions=data.data.getRoleById.listOfPermissions; this.roleName=data.data.getRoleById.name ;  
+
+
+        this.permission.forEach((value)=>{
+        if (this.rolePermissions.findIndex(x=>x.id==value.id)!=-1){
           this.data.permission.push({permission: value , checked: true, id : id})
           switch(value.category){
             case "Roles management" :{
               this.categoryRolePermissions.push({permission: value , checked: true, id : id});
             break;
             } 
-            case "user management" : {
+            case "Users management" : {
               this.categoryUserPermissions.push({permission: value , checked: true, id : id});
               break;
             } 
@@ -181,7 +181,7 @@ export class UserComponent implements OnInit, OnDestroy {
               this.categoryDepPermissions.push({permission: value , checked: true, id : id});
             break;
             } 
-            case "project management" :{
+            case "Request Management" :{
               this.categoryProjectPermissions.push({permission: value , checked: true, id : id});
             break;
             } 
@@ -194,7 +194,7 @@ export class UserComponent implements OnInit, OnDestroy {
             this.categoryRolePermissions.push({permission: value , checked: false, id : id});
           break;
           } 
-          case "user management" : {
+          case "Users management" : {
             this.categoryUserPermissions.push({permission: value , checked: false, id : id});
             break;
           } 
@@ -202,7 +202,7 @@ export class UserComponent implements OnInit, OnDestroy {
             this.categoryDepPermissions.push({permission: value , checked: false, id : id});
             break;
           } 
-          case "project management" : {
+          case "Request Management" : {
             this.categoryProjectPermissions.push({permission: value , checked: false, id : id});
             break;
           } 
@@ -219,7 +219,6 @@ export class UserComponent implements OnInit, OnDestroy {
    }
   }
   toggle(checked: boolean, id : number) {
-
     for(let p of this.updateUserData){
       if (p.role.id == id){
           p.checked=checked;
@@ -237,7 +236,7 @@ export class UserComponent implements OnInit, OnDestroy {
     var newRolePermissions = [] 
     for(let p of this.addRoledata){
       if (p.checked){
-        newRolePermissions.push(parseInt(p.permission.id) );
+        newRolePermissions.push({id :parseInt(p.permission.id) });
       }
     }
     this.roleService.createRole(this.roleName,newRolePermissions).subscribe(()=> this.getData())
@@ -247,10 +246,10 @@ export class UserComponent implements OnInit, OnDestroy {
     var rolePermissions = []
     for(let p of this.data.permission){
       if (p.checked){
-        rolePermissions.push(parseInt(p.permission.id) );
+        rolePermissions.push({id :parseInt(p.permission.id) });
       }
     }
-    this.roleService.updateRole(this.data.id,this.roleName,rolePermissions).subscribe(()=>this.getData())
+    this.roleService.updateRole(parseInt(this.data.id),this.roleName,rolePermissions).subscribe(()=>this.getData())
     this.updateRoleWindow.close()
   }
   updateUser(id){
@@ -261,13 +260,12 @@ export class UserComponent implements OnInit, OnDestroy {
       }
     }
     if (role.length==1)
-    this.userService.addRole(role[0],id).subscribe(()=> this.getData())
+    this.userService.addRole({role:role[0]},id).subscribe(()=> this.getData())
     this.updateUserWindow.close()
   }
   openUpdateUserForm(id) {
     var user ,username ;
     this.updateUserData = []
-
     this.userService.getUserById(id).subscribe((data : any)=> {
        user=data.data.getUserById ;  
        username= data.data.getUserById.name ;
@@ -279,6 +277,55 @@ export class UserComponent implements OnInit, OnDestroy {
       })
        })
   }
+  openAssignProject(id){
+    let suggestedProjects = [] ;
+
+    this.userService.getUserById(id).subscribe((res : any )=>{
+      this.projects.forEach(element => {
+        let founded = false 
+        for(let p of res.data.getUserById.projects){
+          if(p.id==element.id){
+             founded = true 
+             if(element.departements[0].id==1){this.backendProjects.push({project : element , checked : true})}
+             else{
+               if(element.departements[0].id==2){
+                 this.bankeriseProjects.push({project : element , checked : true})
+               }
+               else{
+                 if(element.departements[0].id==3){
+                   this.frontendProjects.push({project : element , checked : true})
+                 }
+                 else{
+                   this.mobileprojects.push({project : element , checked : true})
+                 }
+               }
+             }
+            suggestedProjects.push({project : element , checked : true})
+          }
+        }
+        if(!founded){
+          suggestedProjects.push({project : element , checked : false})
+          if(element.departements[0].id==1){this.backendProjects.push({project : element , checked : false})}
+          else{
+            if(element.departements[0].id==2){
+              this.bankeriseProjects.push({project : element , checked : false})
+            }
+            else{
+              if(element.departements[0].id==3){
+                this.frontendProjects.push({project : element , checked : false})
+              }
+              else{
+                this.mobileprojects.push({project : element , checked : false})
+              }
+            }
+          }
+        }
+      });
+      this.assignProjectsWindow = this.windowService.open(this.assignProjectTemplate , {title : "assign Project" , context :{data : suggestedProjects , user : id}})
+    })
+  }
+  ProjectToggle(projectid , userid){
+    this.userService.assignProject(projectid,userid).subscribe()}
   ngOnDestroy(){
     this.themeSubscription.unsubscribe();
   }
