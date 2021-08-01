@@ -47,7 +47,7 @@
                             {{item.absences.length}}
                         </div>
                     </div>
-                        <button nbButton size="tiny" (click)="addAbsence(item.id)" [nbPopover]="AddAbsenceTemplate"><nb-icon icon="plus-outline"> </nb-icon></button>
+                        <button nbButton size="tiny" *ifPermission='["manageRessources"]' (click)="addAbsence(item.id)" [nbPopover]="AddAbsenceTemplate"><nb-icon icon="plus-outline" > </nb-icon></button>
                 </div>
 
                 </td>
@@ -64,7 +64,7 @@
                                 <div *ngIf="item.vacation!=null">                                 {{item.vacation.length}} 
                                 </div>
                             </div>
-                                <button nbButton size="tiny" (click)="selectUser(item.id)" [nbPopover]="popoverAddVacationTemplate"><nb-icon icon="plus-outline"> </nb-icon></button>
+                                <button nbButton size="tiny" (click)="selectUser(item.id)" [nbPopover]="popoverAddVacationTemplate" *ifPermission='["manageRessources"]'><nb-icon icon="plus-outline"> </nb-icon></button>
                         </div>
                     </td>
                 </tr>
@@ -76,7 +76,7 @@
                         <div class="row"> 
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4"> {{item.projects.length}} </div>
-                        <button nbButton nbTooltip="projects List" size="tiny" (click)="openProjectList(item.projects)"> <nb-icon icon="list-outline"></nb-icon></button>
+                        <button nbButton nbTooltip="projects List" size="tiny" (click)="openProjectList(item.projects)" *ifPermission='["seeAllProjects"]'> <nb-icon icon="list-outline"></nb-icon></button>
                     </div>
                     </td>
                 </tr>
@@ -88,16 +88,8 @@
                         <div class="row"> 
                             <div class="col-sm-4"></div>
                             <div class="col-sm-4">  {{item.tasks.length}} </div>
-                            <button nbButton nbTooltip="projects List" size="tiny" (click)="openTaskList(item.id)" > <nb-icon icon="list-outline"></nb-icon></button>
+                            <button nbButton nbTooltip="tasks List" size="tiny" (click)="openTaskList(item.id)" *ifPermission='["seeAllTasks"]' > <nb-icon icon="list-outline"></nb-icon></button>
                         </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        salary
-                    </th>
-                    <td style="text-align: center;">
-                        {{item.salary}}
                     </td>
                 </tr>
 

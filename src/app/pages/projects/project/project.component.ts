@@ -55,21 +55,63 @@ projectData={name : null,  projectManager : 1 , duration : null, budget: null , 
 
    }
   ngOnInit(): void {
+    this.store.dispatch(new GetUserAction)
+    this.store.select(currentUserSelector).subscribe((data : any)=>{
+
   this.getAllproject();
+    })
+}
 
-}
-collapse (){
-  this.sidebarService.collapse('sidebar')
-}
-noncollapse(){
-  this.sidebarService.expand('sidebar')
-}
 getAllproject(){
-  
 
-  this.projectService.getAllProjects().subscribe((data:any)=>{ 
-    this.allProjects=data.data.getAllProjects
-    this.projects=this.allProjects
+  this.projectService.getAllProjects().subscribe((dataproject:any)=>{ 
+    console.log("dataProject", dataproject)
+    this.projects=dataproject.data.getAllProjects
+    this.store.dispatch(new GetUserAction)
+  this.store.select(departementSelector).subscribe((data : any)=>{
+    if(data.length==0){
+    this.allProjects=dataproject.data.getAllProjects
+    }
+    else{
+this.allProjects=[]
+      switch (parseInt(data[0])){
+        case 1 : {
+          for(let p of this.projects){
+            if(p.departements[0].name=="backendDep"){
+              this.allProjects.push(p)
+            }
+          }
+        break ;
+        }
+        case 3 : {
+          for(let p of this.projects){
+            if(p.departements[0].name=="frontendDep"){
+              this.allProjects.push(p)
+            }
+          }
+        break ;
+        }
+        case 4 : {
+          for(let p of this.projects){
+            if(p.departements[0].name=="mobile"){
+              this.allProjects.push(p)
+            }
+          }
+        break ;
+      
+        }
+        case 2 : {
+          for(let p of this.projects){
+            if(p.departements[0].name=="bankerise"){
+              this.allProjects.push(p)
+            }
+          }
+        break ;
+      
+        }
+      }
+    }
+    })
     this.getUserProjects();
 
 }) }

@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectService } from '../../../@core/services/projects.service';
 import { saveAs } from 'file-saver'
+import { UserService } from '../../../@core/services/user.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../@core/auth/ngrx-auth/appState';
+import { GetUserAction } from '../../../@core/auth/ngrx-auth/auth.actions';
+import { currentUserSelector } from '../../../@core/auth/ngrx-auth/auth.reducers';
 
 
 @Component({
@@ -9,18 +14,30 @@ import { saveAs } from 'file-saver'
   })
   export class ReportsComponent implements OnInit {
     projects ;
+    userProjects
     customColumn = 'project';
     defaultColumns = [ 'project','departement', 'createdAt', 'action' ];
     allColumns = [ this.customColumn, ...this.defaultColumns ];
 
-    constructor( private projectService : ProjectService ){}
+    constructor( private projectService : ProjectService ,
+        private userService : UserService ,
+        private store : Store<AppState>,
+
+        ){}
 
 
     ngOnInit(){
+        this.store.dispatch(new GetUserAction)
+        this.store.select(currentUserSelector).subscribe((data : any)=>{
+    
         this.projectService.getAllProjects().subscribe((res : any)=>{
             this.projects = res.data.getAllProjects; 
           })
+          this.userService.getUserProjects(data.user.id).subscribe((res: any)=>{
+            this.userProjects=res.data.getUserWithProjects.projects;
+          })
 
+        })
     }
 
     getDate(date){

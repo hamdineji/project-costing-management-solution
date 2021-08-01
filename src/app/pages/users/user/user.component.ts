@@ -19,7 +19,7 @@ export class UserComponent implements OnInit, OnDestroy {
   allPermissions;
   currentTheme: string;
   themeSubscription: any;
-  users ;
+  users = [] ;
   data ;
   updateUserData;
   rolesData ;
@@ -33,17 +33,20 @@ export class UserComponent implements OnInit, OnDestroy {
   updateUserWindow:NbWindowRef;
   addRoleWindow : NbWindowRef;
   assignProjectsWindow : NbWindowRef;
-  addRoledata;
+  addRoledata = [];
   categoryRolePermissions = [];
   categoryUserPermissions=[];
   categoryDepPermissions;
   categoryProjectPermissions=[];
+  categoryRessourcesPermissions =[]
+  categoryFacturesPermissions=[]
   projects
   currentUserPermission=[];
   backendProjects = [];
   frontendProjects = []
   mobileprojects = [];
   bankeriseProjects = [];
+  currentUser
   @ViewChild('updateRoleTemplate') updateRoleTemplate: TemplateRef<any>;
   @ViewChild('updateUserTemplate') updateUserTemplate: TemplateRef<any>;
   @ViewChild('addRoleTemplate') addRoleTemplate: TemplateRef<any>;
@@ -66,14 +69,16 @@ export class UserComponent implements OnInit, OnDestroy {
       })
       this.store.dispatch(new GetUserAction)
       this.store.select(currentUserSelector).subscribe((data : any)=>{
+        this.currentUser = data
+        this.getData();
+
   });
-   this.getData();
   }
   getData() {
     this.userService.getUsers().subscribe((data:any )=>{  
       this.users=data.data.getUsers
+      if(this.users!=null){
       this.users.forEach(element => {
-
           const index = this.users.indexOf(element) ;
           if(element.role==null){
             this.users[index].role="not yet Defined"
@@ -81,17 +86,17 @@ export class UserComponent implements OnInit, OnDestroy {
         if(element.departement ==null){
           this.users[index].departement="not yet Defined"
         }
-    
-      });
+      });}
     });
     this.roleService.getRoles().subscribe((data : any)=>{this.roles=data.data.getAllRoles ;
       var rolesData =[];
     this.roles.forEach((value) => {
-       var rolesManagementPermissions=[] ;
+      var rolesManagementPermissions=[] ;
       var usersManagementPermissions =[] ;
       var projectManagementPermissions=[] ;
       var DepartementManagementPermissions=[] ;
-
+      var RessourcesManagementPermissions=[]
+      var FacturesManagementPermissions =[]
       value.listOfPermissions.forEach((element)=>{
           switch(element.category){ 
             case "Roles management" : {
@@ -102,21 +107,30 @@ export class UserComponent implements OnInit, OnDestroy {
               usersManagementPermissions.push(element);
               break ;
             }
-            case "Request Management" : {
+            case "Projects management" : {
               projectManagementPermissions.push(element);
               break ;
             }
             case "Departement management" : {
               DepartementManagementPermissions.push(element);
               break ;
+            } 
+            case "Ressources Management" : {
+              RessourcesManagementPermissions.push(element);
+              break ;
+            }
+            case "Factures Management" : {
+              FacturesManagementPermissions.push(element);
+              break ;
             }
           }
-        
         })
         rolesData.push({role : value.name , rolesManagementPermissions : rolesManagementPermissions,
         usersManagementPermissions : usersManagementPermissions ,
         projectManagementPermissions:projectManagementPermissions,
         DepartementManagementPermissions:DepartementManagementPermissions,
+        RessourcesManagementPermissions : RessourcesManagementPermissions,
+        FacturesManagementPermissions : FacturesManagementPermissions,
         id : value.id});      
     }
     );
@@ -124,13 +138,18 @@ export class UserComponent implements OnInit, OnDestroy {
   })
   }
 
-  openAddRoleForm() {
+  openAddRoleForm(){
     this.roleName=""
       this.permissionService.getPermissions().subscribe((data : any)=> {this.allPermissions=data.data.getAllPermission;
-      this.addRoledata=[];
+      this.addRoledata = [];
       this.categoryRolePermissions=[] ; 
-      this.categoryUserPermissions=[]
-      this.allPermissions.forEach((value)=>{this.addRoledata.push({permission: value , checked: false})
+      this.categoryUserPermissions=[] ; 
+      this.categoryDepPermissions = [];
+      this.categoryProjectPermissions=[];
+      this.categoryRessourcesPermissions = []
+      this.categoryFacturesPermissions = []
+      this.allPermissions.forEach((value)=>{
+        this.addRoledata.push({permission: value , checked: false})
     switch(value.category){
       case "Roles management" :{
         this.categoryRolePermissions.push(value);
@@ -144,28 +163,32 @@ export class UserComponent implements OnInit, OnDestroy {
         this.categoryDepPermissions.push(value);
         break;
       } 
-      case "Request Management" : {
+      case "Projects management" : {
         this.categoryProjectPermissions.push(value);
         break;
+      }
+      case "Ressources Management" : {
+        this.categoryRessourcesPermissions.push(value);
+        break;
       } 
+      case "Factures Management" : {
+        this.categoryFacturesPermissions.push(value);
+        break;
+      }  
     }
     })
     });
     this.addRoleWindow=this.windowService.open(this.addRoleTemplate, { title: `Add Role` , context : {data :this.addRoledata} });
   }
-  openUpdateRoleForm(id) {
+  openUpdateRoleForm(id){
     this.permissionService.getPermissions().subscribe((data : any)=> { this.permission=data.data.getAllPermission;
       this.data={id : id ,permission : []};
       this.categoryRolePermissions=[];
       this.categoryUserPermissions=[];
       this.categoryDepPermissions=[];
       this.categoryProjectPermissions=[];
-
-
       this.roleService.getRoleByID(id).subscribe((data: any)=>{this.rolePermissions=data.data.getRoleById.listOfPermissions; this.roleName=data.data.getRoleById.name ;  
-
-
-        this.permission.forEach((value)=>{
+      this.permission.forEach((value)=>{
         if (this.rolePermissions.findIndex(x=>x.id==value.id)!=-1){
           this.data.permission.push({permission: value , checked: true, id : id})
           switch(value.category){
@@ -249,7 +272,10 @@ export class UserComponent implements OnInit, OnDestroy {
         rolePermissions.push({id :parseInt(p.permission.id) });
       }
     }
-    this.roleService.updateRole(parseInt(this.data.id),this.roleName,rolePermissions).subscribe(()=>this.getData())
+    this.roleService.updateRole(parseInt(this.data.id),this.roleName,rolePermissions).subscribe(()=>this.getData()
+    ,(err)=>{
+
+    })
     this.updateRoleWindow.close()
   }
   updateUser(id){

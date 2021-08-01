@@ -29,7 +29,7 @@
 </nb-card>
 
 <nb-card style="margin-top: 1rem;">
-    <div class="row"> 
+    <div class="row" > 
         <div class="col-sm-10">
             <h5 style="margin-left: 1rem; margin-top: 1rem;">project follow-up by deliverable</h5>
         </div>
@@ -42,33 +42,30 @@
         <h6 class="col-sm-3">
             <nb-icon icon="radio-button-off-outline" style="margin-right:1rem ;"></nb-icon>
             </h6>
-            <h6 class="col-sm-8">{{initPhase.name}}</h6>
+        <h6 class="col-sm-7">{{initPhase.name}}</h6>
+          <button nbButton nbTooltip="Add Facture" size="tiny" *ifPermission='["createFacture"]' (click)="openAddFactureWindow(initPhase.id)"><nb-icon icon="plus-outline" nbButton> </nb-icon></button>
 
-            <!-- <nb-icon icon="arrow-forward-outline" class="col-sm-2" (click)="setPhaseStatus(initPhase.id)" nbTooltip="update status"></nb-icon> -->
     </div>
 </nb-card-header> 
-<table class="table ">
+<table class="table " >
     <th scope="row" >
         <div class="row">
             <nb-icon icon="calendar-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>baseline Date 
         </div>
     </th>
-    <td>
-{{getDate(initPhase.baselineDate)}} </td>
+    <td>{{getDate(initPhase.baselineDate)}}</td>
     <tr>
         <th scope="row" >
             <div class="row">
                 <nb-icon icon="clock-outline" style="margin-right: 0.5rem;margin-left: 0.5rem;"></nb-icon>
                 forecast Date
-            </div>
-            
+            </div> 
         </th>
         <td>
             <div class="row">
                 {{getDate(initPhase.forecastedDate)}}
                 <nb-icon icon="edit-outline" *ngIf="departement.CRapprovers.length!=0" nbTooltip=" change Date"style="margin-left: 0.5rem;" (click)="openCreateCRWindow(initPhase.forecastedDate,initPhase.id)" ></nb-icon>    
             </div>
-           
         </td>
     </tr>
     <tr>
@@ -112,18 +109,16 @@
 </div> 
 <div class="col-sm-3">
 <nb-card>
-    <!-- [attr.aria-label]="planificationPhase.status ? 'delivered and delayed' : 'done':'delayed' : 'in progress' : 'waiting to start' " 
-    [style.background-color]="planificationPhase.status ? '#d97642':'#ddffbc' : '#be0000' :'lightblue' :'#be0000' " > -->
     <nb-card-header [style.background-color]="getcolor(planificationPhase.status)">
 
         <div class="row">
             <h6 class="col-sm-3">
                 <nb-icon icon="clipboard-outline" style="margin-right: 1rem;"></nb-icon>
                 </h6>
-                <h6 class="col-sm-8">planification</h6>
+                <h6 class="col-sm-7">planification</h6>
 
-                <!-- <nb-icon icon="arrow-forward-outline" class="col-sm-2" (click)="setPhaseStatus(planificationPhase.id)" nbTooltip="update status"></nb-icon> -->
-        </div>
+                <button nbButton nbTooltip="Add Facture" size="tiny" *ifPermission='["createFacture"]' (click)="openAddFactureWindow(planificationPhase.id)"><nb-icon icon="plus-outline" nbButton> </nb-icon></button>
+            </div>
 </nb-card-header>
         <table class="table ">
             <th scope="row" >
@@ -194,10 +189,10 @@
                 <h6 class="col-sm-3">
                     <nb-icon icon="monitor-outline" style="margin-right: 1rem;"></nb-icon>
                     </h6>
-                    <h6 class="col-sm-8">development</h6>
+                    <h6 class="col-sm-7">development</h6>
 
-                    <!-- <nb-icon icon="arrow-forward-outline" class="col-sm-2" (click)="setPhaseStatus(devPhase.id)" nbTooltip="update status"></nb-icon> -->
-            </div>
+                    <button nbButton nbTooltip="Add Facture" size="tiny" *ifPermission='["createFacture"]' (click)="openAddFactureWindow(devPhase.id)"><nb-icon icon="plus-outline" nbButton> </nb-icon></button>
+                </div>
     </nb-card-header> 
     <table class="table">
         <th scope="row">
@@ -242,14 +237,14 @@
                 </div>
             </th>
             <td>
-                <div class="row" *ngIf="false">
+                <div class="row" *ngIf="devPhase.file">
                     <div class="col-sm-10" style="text-align: center;">
                 delivered 
                     </div>
                 <nb-icon icon="arrow-circle-down-outline" (click)="savefile(devPhase.file)" nbTooltip="download File">
                 </nb-icon>
                 </div>
-                <div class="row">
+                <div class="row"  *ngIf="!devPhase.file">
                     <div class="col-sm-10" style="text-align: center;">
                 not Yet 
                     </div>
@@ -269,9 +264,9 @@
                 <h6 class="col-sm-3">
                     <nb-icon icon="cloud-upload-outline" style="margin-right: 1rem;"></nb-icon>
                     </h6>
-                    <h6 class="col-sm-8">deploiement</h6>
-                    <!-- <nb-icon icon="arrow-forward-outline" class="col-sm-2" (click)="setPhaseStatus(depPhase.id)" nbTooltip="update status"></nb-icon> -->
-            </div>
+                    <h6 class="col-sm-7">deploiement</h6>
+                    <button nbButton nbTooltip="Add Facture" size="tiny" *ifPermission='["createFacture"]' (click)="openAddFactureWindow(depPhase.id)"><nb-icon icon="plus-outline" nbButton> </nb-icon></button>
+                </div>
     </nb-card-header> 
     <table class="table ">
         <th scope="row" >
@@ -315,7 +310,7 @@
                 </div>
             </th>
             <td>
-                <div class="row" *ngIf="false">
+                <div class="row" *ngIf="depPhase.file">
                     <div class="col-sm-10" style="text-align: center;">
                 delivered 
                     </div>
@@ -323,7 +318,7 @@
                 </nb-icon>
 
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="!depPhase.file">
                     <div class="col-sm-10" style="text-align: center;">
                 not Yet 
                     </div>
@@ -657,10 +652,10 @@
             </nb-card-header>
         </nb-card>
     </nb-tab>
-    <nb-tab tabTitle="Requests">
+    <nb-tab tabTitle="Requests" *ifPermission='["CRapprover"]' >
         <nb-card>
             <nb-card-header>
-                list of Change Requests
+                list of Requests
             </nb-card-header>
             <nb-card-header style="max-height: 60vh; overflow-y: scroll " >
                 <div *ngFor="let item of CRrequests">
@@ -1705,4 +1700,147 @@
             </div>
         </div>
     </form>
+</ng-template>
+<ng-template #addFactureTemplate let-data>
+    <form>
+        <div class="row"> 
+        <div class="col-md-6">
+                <label for="inputFactureBudget" class="label">facture budget</label>
+                <input type="text" nbInput fullWidth id="inputTaskBudget" name="inputFactureBudget" placeholder="enter budget with euro" [(ngModel)]="data.factureValue">
+            </div>
+            <div class="col-md-6">
+                <label for="inputFactureDate" class="label">final payment date</label>
+                <input type="text" nbInput fullWidth id="inputFactureDate" name="inputFactureDate" [nbDatepicker]="deadlineTimePicker" placeholder="Facture final Date" [(ngModel)]="data.factureDate" >
+                <nb-date-timepicker
+                      #deadlineTimePicker
+                      singleColumn
+                      [step]="10" ></nb-date-timepicker>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+            <div class="row">  
+                <button status ="primary" style="margin-left: 1rem;" nbButton size="small" style="margin-top: 1rem;" (click)="genaratePdf(data.factureValue , data.factureDate)"  >generate bill</button>
+            </div>
+         </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #facture style="height: 80vh;" let-data>
+    <div style="width : 50rem; margin-top : 2rem ;margin-left : 1rem;max-height: 70vh; overflow-y: scroll ; overflow-x: hidden; ">
+        <div id="element-to-export">
+            <div class="row" >
+                <div class="col-sm-1"></div>
+                <h2 class="col-sm-7" >Facture</h2>
+                <div class="col-sm-2">     
+                <img src="../../../../assets/images/Proxym.png" class="logo"  style="width: 150px;">
+                </div>
+            </div>
+            <hr>
+        <div class="row" style="margin-top: 5%;">
+            <div class="col-sm-1"></div>
+            <table class="col-sm-6">
+                <tr>
+                    <th> <p>De</p></th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td><h5>Proxym-IT</h5></td>
+                </tr>
+            <tr>
+            <th><p>adresse</p> </th>
+            <td><p>technopole de sousse 4051 -Tunisie</p></td>
+        </tr>
+           <tr> 
+            <th><p> email</p>  </th>
+   
+            <td><p>contact@proxym-group.com</p></td>
+        </tr>
+        <tr>
+            <th><p>phone</p>  </th>
+            <td><p>(+216) 36 01 50 50</p></td>
+        </tr>
+        <tr>
+            <th><p>fax</p></th>
+            <td><p>(+216) 36 01 50 51</p></td>
+        </tr>
+        </table>
+        <table>
+            <tr>
+                <th> <p>A</p></th>
+            </tr>
+            <tr>
+                <th></th>
+                <td><h5>BH-Bank</h5></td>
+            </tr>
+        <tr>
+        <th><p>adresse</p> </th>
+        <td><p>18 Avenue Mohamed V Tunis</p></td>
+    </tr>
+       <tr> 
+        <th><p> email</p> </th>
+
+        <td><p>contact@bhbank.tn</p></td>
+    </tr>
+    <tr>
+        <th><p>phone</p>  </th>
+        <td><p>(+216) 71 126 000</p></td>
+    </tr>
+        </table>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-1"></div>
+        <table class="col-sm-10 table table-bordered">
+            <tr>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Budget
+                </th>
+                <th>
+                    status
+                </th>
+                <th>
+                    Deadline
+                </th>
+
+            </tr>
+            <tr>
+                <td>c'est la description de cette facture</td>
+                <td> {{data.factureValue}} euro</td>
+                <td>not Payed</td>
+                <td>{{data.factureDate}}</td>
+            </tr>
+        </table></div>
+        <div class="row" style="margin-top: 2%;">
+            <div class="col-sm-8">
+
+            </div>
+            <div class="col-sm-4">
+                <img src="../../../../assets/images/signature.JPG">
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5%;">
+            <div class="col-sm-1">
+            </div>
+            <div class="col-sm-5">
+                <p>
+                    caisse d'epargne
+                </p>
+                <p>IBAN : FR12 1234 5678</p>
+                <p>SWIFT/BIC : ABCDFRP1XXX</p>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-10">
+        </div>
+        <div>
+            <button nbButton (click)="addFacture(data.factureValue ,data.factureDate)" status="primary">Save</button>
+        </div>
+    </div>
 </ng-template>

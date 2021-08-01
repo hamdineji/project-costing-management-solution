@@ -27,35 +27,23 @@ export class IfPermissionDirective implements OnInit ,OnChanges {
     private store : Store<AppState>
   ) {}
 
-  public ngOnInit(): void {
-        // this.store.dispatch(new GetUserAction)
-        // this.store.select(currentUserSelector).subscribe((data : any)=>{
-        //   var permissions   = data.permissions
-        //   console.log('permissions', permissions);
-        //   console.log('listofPermissions',this.ifPermission[0])
-        //     if(permissions.findIndex(x=>x.name==this.ifPermission[0])!=-1){
-        //       console.log("active")
-        //       this.viewContainerRef.createEmbeddedView(this.templateRef);
-        //     }
-        //   });        
+  public ngOnInit(): void {      
       }
     
       ngOnChanges(){
-   
       this.store.dispatch(new GetUserAction)
       this.store.select(currentUserSelector).subscribe((data : any)=>{
         var permissions   = data.permissions
-        console.log("datadirective",data)
           if(permissions.findIndex(x=>x.name==this.ifPermission[0])!=-1){
-            console.log("active")
+            console.log("founded")
             this.viewContainerRef.createEmbeddedView(this.templateRef);
           }
           else{
+            console.log("not Founded")
             this.viewContainerRef.clear()
           }
         });  
     }
-    
     }
 
 

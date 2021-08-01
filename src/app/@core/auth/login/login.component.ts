@@ -7,7 +7,6 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../ngrx-auth/appState';
 import { SaveUserAction } from '../ngrx-auth/auth.actions';
 import { currentUserSelector } from '../ngrx-auth/auth.reducers';
-import { User } from '../../models/user';
 
 
 
@@ -21,7 +20,7 @@ export class NgxLoginComponent implements OnInit{
     password: '',
   }
   alert : boolean =false ;
-currentUser : User ;
+currentUser  
 showPassword = false;
   constructor( private _auth : LoginService, private _router: Router , private store : Store<AppState>){
 
@@ -46,7 +45,7 @@ showPassword = false;
       .subscribe(
         (res:any) => {
            localStorage.setItem('token', res.data.login)
-           this._router.navigate(['/pages/users/user' ])
+           this._router.navigate(['/pages/dashboard' ])
            this.store.dispatch(new SaveUserAction(this._auth.getUser(res.data.login)))
            this.store.select((state)=>state).subscribe();  
         }, 

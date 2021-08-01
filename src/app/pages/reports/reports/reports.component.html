@@ -1,6 +1,6 @@
-<h2 style="text-align: center;">Logs List</h2>
+<h2 style="text-align: center;">Reports List</h2>
 
-<nb-card>
+<nb-card *ifPermission='["seeAllProjects"]'>
     <nb-card-body>
 
         <table class="table table-bordered table-hover">
@@ -24,6 +24,65 @@
         </thead>
         <tbody>
             <tr *ngFor="let p of projects">
+                <td style="text-align: center;">
+                   {{p.name}} 
+                </td>
+                <td style="text-align: center;">
+                    {{p.departements[0].name}}
+                </td>
+                <td>
+                    <div *ngIf="p.report!=null" style="text-align: center;">
+                        {{p.report.name}}
+                    </div>
+                    <div *ngIf="p.report==null" style="text-align: center;">
+                            -
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="p.report!=null" style="text-align: center;">
+                        {{getDate(p.report.createdAt)}}
+                    </div>
+                    <div *ngIf="p.report==null" style="text-align: center;">
+                            -
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="p.report!=null" class="row">
+                        <div class="col-sm-4"></div>
+                        <div  class="col-sm-4">
+                            <button nbButton size="tiny" (click)="savefile(p.report.id+'_'+p.report.name)"> <nb-icon icon="arrow-circle-down-outline"></nb-icon> download</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+      </nb-card-body>
+</nb-card>
+<nb-card *ifDepartementPermission='["seeAllProjects"]'>
+    <nb-card-body>
+
+        <table class="table table-bordered table-hover">
+           <thead style="background-color: #a7c5eb;"> <tr style="text-align: center;">
+                <th>
+                    project
+                </th>
+                <th>
+                    departement
+                </th>
+                <th>
+                    file 
+                </th>
+                <th>
+                    createdAt
+                </th>
+                <th>
+                    action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let p of userProjects">
                 <td style="text-align: center;">
                    {{p.name}} 
                 </td>

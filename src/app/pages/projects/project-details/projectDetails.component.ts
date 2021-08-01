@@ -20,7 +20,8 @@ import { UserService } from '../../../@core/services/user.service';
 import { ProjectService } from '../../../@core/services/projects.service';
 import { DecisionService } from '../../../@core/services/meetingDecision.service';
 import { DepartementService } from '../../../@core/services/departements.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import * as html2pdf from 'html2pdf.js'
+import { FactureService } from '../../../@core/services/facture.service';
 @Component({
     selector: 'ngx-project-details',
     templateUrl: './projectDetails.component.html',
@@ -39,6 +40,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     createDRWindow : NbWindowRef;
     createMeetDecisionWinodw : NbWindowRef ; 
     addReportWindow : NbWindowRef;
+    addFactureWindow : NbWindowRef ;
+    factureWindow : NbWindowRef;
     details;
     report; 
     project = {name : "", departements : [] , forcast  : "" , baselineDate :"" , score : "" , progress : ""}
@@ -78,6 +81,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     meetFile
     CR="CR";
     DR="DR";
+    facture ; 
     departement = {CRapprovers : [] , DRapprovers : []} ;
     @ViewChild('addReportTemplate') addReportTemplate: TemplateRef<any>;
     @ViewChild('addHighlightTemplate') addHighlightTemplate: TemplateRef<any>;
@@ -92,6 +96,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     @ViewChild('CRrequestTemplate') CRrequestTemplate : TemplateRef<any>;
     @ViewChild('updateCRTemplate') updateCRTemplate : TemplateRef<any>;
     @ViewChild('createDRTemplate') createDRTemplate : TemplateRef<any>;
+    @ViewChild('addFactureTemplate') addFactureTemplate : TemplateRef<any>;
+    @ViewChild('facture') factureTemplate : TemplateRef<any>;
     constructor(
       private store : Store<AppState>, 
       private phaseService : PhaseService , 
@@ -109,6 +115,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
       private projectService : ProjectService,
       private decisionService : DecisionService,
       private departementService : DepartementService,
+      private factureService : FactureService,
       private http : HttpClient
     ){
     }
@@ -406,15 +413,12 @@ this.details.dateRaised=this.getDate(this.details.dateRaised);
 
 openCreateTaskWindow(){
   this.Developers=[]
-  this.roleService.getRolesByPermission(1).subscribe((res:any)=>{
-  res.data.getRolesByPermission.forEach(element => {
-  this.userService.getUsersByRole(element.id).subscribe((data: any)=>{
-    for(let u of data.data.getUsersByRole){
-    this.Developers.push(u)}
+
+  this.userService.getUsers().subscribe((data: any)=>{
+  
+    this.Developers=data.data.getUsers
+    this.addTaskWindow=this.windowService.open(this.addTaskTemplate ,{title:"create new Task" , context:{description :"",budget : 0 , startDate:"" ,endDate:"" , developers : this.Developers }})
   })
-});
-  this.addTaskWindow=this.windowService.open(this.addTaskTemplate ,{title:"create new Task" , context:{description :"",budget : 0 , startDate:"" ,endDate:"" , developers : this.Developers }})
-})
 }
 selectUser($event){
   this.userTask =$event 
@@ -634,6 +638,10 @@ uploadReport(){
     this.addReportWindow.close();
   })
 }
+save(){
+  const content : Element = document.getElementById('element-to-export')
+  html2pdf().from(content).save()
+}
 getcolor(status){
   if(status=='delayed'){
   return '#be0000'}
@@ -643,11 +651,27 @@ getcolor(status){
   if(status=='waiting to start'){
     return 'lightblue'
   }
-  if(status=='delayed and delivered'){
+  if(status=='delayed & delivered'){
     return "#d97642"
   }
   if(status=='in progress'){
     return '#fbe0c4'
   }
+}
+openAddFactureWindow( id ){
+  this.facture= id ;
+  this.addFactureWindow=this.windowService.open(this.addFactureTemplate,{title: `Create bill` , context: {factureValue :"" , factureDate : ""}})
+}
+genaratePdf(val,date){
+  this.addFactureWindow.close()
+  this.factureWindow=this.windowService.open(this.factureTemplate,{title: `Facture` , context: {factureValue :val , factureDate : date}})
+}
+async addFacture(val,date) {
+  const content : Element = document.getElementById('element-to-export')
+  console.log("vaaal", val)
+  console.log("daaate", date)
+ html2pdf().from(content).toPdf().output('blob').then((result) => {
+  this.factureWindow.close()
+  this.factureService.createFacture("detail", parseInt(val), date , this.facture ,result ).subscribe()})
 }
 }

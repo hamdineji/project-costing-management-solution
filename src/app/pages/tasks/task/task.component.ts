@@ -14,9 +14,15 @@ import { UserService } from '../../../@core/services/user.service';
   styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
-tasks 
-taskDetails
+tasks =[]
+taskDetails;
 allTasks
+allnewTasks=[]
+usernewTasks=[]
+allInprogressTasks=[]
+userInprogressTasks=[]
+alldoneTasks=[]
+userdoneTasks=[]
 allProjects
 allUsers
 connectedUser
@@ -34,14 +40,40 @@ userProjects
     this.store.select(currentUserSelector).subscribe((data : any)=>{
     this.connectedUser=data
     this.taskService.getTasksByUser(data.user.id).subscribe((res: any)=>{
-    this.tasks=res.data.getTasksByUser
-    })  
+    res.data.getTasksByUser.forEach(element => {
+      if(element.status=="new"){
+        this.usernewTasks.push(element)
+      }
+      else{
+        if(element.status=="in progress"){
+          this.userInprogressTasks.push(element)
+        }
+        else{
+          this.userdoneTasks.push(element)
+        }
+      }
+    });
+    })
     this.userService.getUserProjects(data.user.id).subscribe((res: any)=>{
       this.userProjects=res.data.getUserWithProjects.projects;
     })
  })
 this.taskService.getAllTasks().subscribe((res: any)=>{
-  this.allTasks = res.data.getAllTasks
+  this.allTasks= res.data.getAllTasks
+  res.data.getAllTasks.forEach(element => {
+    if(element.status=="new"){
+      this.allnewTasks.push(element)
+    }
+    else{
+      if(element.status=="in progress"){
+        this.allInprogressTasks.push(element)
+      }
+      else{
+        this.alldoneTasks.push(element)
+      }
+    }
+  });
+  
 })
 this.projectService.getAllProjects().subscribe((res: any)=>{
 this.allProjects = res.data.getAllProjects
@@ -50,13 +82,48 @@ this.userService.getUsers().subscribe((res: any)=>{
   this.allUsers= res.data.getUsers
 })
   }
+  filterStatus(tasks){
+    this.allnewTasks=[]
+    this.allInprogressTasks=[]
+    this.alldoneTasks=[]
+    tasks.forEach(element => {
+      if(element.status=="new"){
+        this.allnewTasks.push(element)
+      }
+      else{
+        if(element.status=="in progress"){
+          this.allInprogressTasks.push(element)
+        }
+        else{
+          this.alldoneTasks.push(element)
+        }
+      }
+    });
+  }
+userFilterStatus(tasks){
+  this.usernewTasks=[]
+  this.userInprogressTasks=[]
+  this.userdoneTasks=[]
+  tasks.forEach(element => {
+    if(element.status=="new"){
+      this.usernewTasks.push(element)
+    }
+    else{
+      if(element.status=="in progress"){
+        this.userInprogressTasks.push(element)
+      }
+      else{
+        this.userdoneTasks.push(element)
+      }
+    }
+  });
+}
   setTaskStatus(item){
     const idx=this.tasks.indexOf(item)
     this.taskService.setTaskStatus(item.id).subscribe((res:any)=>{
       this.tasks[idx].status=res.data.setTaskStatus.status
     })
   }
-
   getDate(date){
     var d = new Date(date),
           month = '' + (d.getMonth() + 1),
@@ -74,44 +141,44 @@ this.userService.getUsers().subscribe((res: any)=>{
       mins='0'+mins
       return year+'/'+month+'/'+day+' '+hours+':'+mins;
   }
-
   showTaskDetails(item){
     this.taskDetails=item
   }
   selectProjectFilter($event){
     if($event==0){
       this.taskService.getAllTasks().subscribe((res:any)=>{
-        this.allTasks=res.data.getAllTasks;
+        this.filterStatus(res.data.getAllTasks)
       })
     }
     else{
       this.taskService.getTasksByProject($event).subscribe((res: any)=>{
-        this.allTasks=res.data.getTasksByProject;})
+        this.filterStatus(res.data.getTasksByProject);})
     }
   }
   selectUserFilter($event){
     if($event==0){
       this.taskService.getAllTasks().subscribe((res:any)=>{
-        this.allTasks=res.data.getAllTasks;
+        this.filterStatus(res.data.getAllTasks)
+
       })
     }
     else{
       this.taskService.getTasksByUser($event).subscribe((res: any)=>{
-        this.allTasks=res.data.getTasksByUser;})
+        this.filterStatus(res.data.getTasksByUser)
+      })
     }
   }
   selectUserProjectFilter($event){
     if($event==0){
       this.taskService.getTasksByUser(this.connectedUser.user.id).subscribe((res:any)=>{
-        this.tasks=res.data.getTasksByUser;
+        this.userFilterStatus(res.data.getTasksByUser)
       })
     }
     else{
-      this.taskService.getUserTasksByProject(this.connectedUser.user.id, $event).subscribe((res : any)=>{
-        this.tasks=res.data.getUserTaskByProject;
-        console.log('res', res.data.getUserTaskByProject)
+      this.taskService.getUserTasksByProject( $event,this.connectedUser.user.id).subscribe((res : any)=>{
+        console.log("hahahaha" , res.data.getUserTaskByProject)
+        this.userFilterStatus(res.data.getUserTaskByProject)
       })
     }
   }
-
 }

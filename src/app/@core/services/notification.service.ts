@@ -8,8 +8,18 @@ getNotificationByUser($user : ID){
     getNotificationByUser(user : $user){
     description 
     createdAt
+    seen
     createdby{name
     image}
+  }
+}
+`
+const openNotif = gql
+`
+mutation 
+setNotif($user : ID){
+  setNotif(user : $user){
+    id
   }
 }
 `
@@ -27,5 +37,10 @@ allnotifications
       })
   }
  
- 
+ setNotif(user){
+   return this.apollo.mutate({
+     mutation : openNotif ,
+     variables : {user}
+   })
+ }
 }

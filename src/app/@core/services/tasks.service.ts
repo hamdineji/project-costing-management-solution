@@ -65,6 +65,7 @@ getTasksByUser($user : ID ){
   getTasksByUser(user: $user){
     id
     project{name}
+    user{id name image}
     description 
     budget
     startDate

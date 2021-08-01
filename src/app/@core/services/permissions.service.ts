@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Apollo , gql} from "apollo-angular";
-import { Permission } from "../models/permission";
 
 const getPermissions = gql `
 query {
@@ -28,7 +27,7 @@ export class PermissionService {
   constructor( private apollo : Apollo) {}
 
 getPermissions(){
-    return  this.apollo.query<Array<Permission>>({
+    return  this.apollo.query({
         query : getPermissions 
       })
 }

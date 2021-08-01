@@ -1,4 +1,4 @@
-import { User } from "../../../@core/models/user";
+import { User } from "../../models/user";
 import { AuthAction , AuthActionTypes } from "./auth.actions";
 import { createFeatureSelector, createSelector, Store } from "@ngrx/store";
 

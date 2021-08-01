@@ -1,26 +1,70 @@
 <h6>List of Logs</h6>
-<nb-card>
+<nb-card *ifPermission='["seeAllLogs"]'>
+
 <div *ngFor="let log of logsList">
-<nb-card style="margin-top: 1rem; margin-left: 1rem;margin-right: 1rem; background-color: #fbc6a4;" >
+<nb-card style="margin-top: 1rem; margin-left: 1rem;margin-right: 1rem; " >
     <nb-card-header >
         <div class="row">
-            <div class="col-sm-2">
-                <nb-icon icon="recording-outline"></nb-icon>
-            </div>
-            <div>
-                description : 
-            </div>
-            <div class="col-sm-6">
-                {{log.description}}
-            </div>
-            <div>
-                time : 
+            <div class="col-sm-1">
+                <nb-user 
+                  name=""
+                  picture="assets/images/{{log.user.image}}">
+                  </nb-user>
+            </div>        
+            <div class="col-sm-8">
+                <div>{{log.user.name}} {{log.description}}</div>
+                <div class="row">
+                    <div class="col-sm-4" *ngIf="log.project!=null">Project : {{log.project.name}}</div>
+                    <div class="col-sm-8" *ngIf="log.task!=null">task description :{{log.task.description}}</div>                  
+                </div>
             </div>
             <div class="col-sm-2">
                 {{getDate(log.createdAt)}}
+            </div>
+            <div class="col-sm-1">
+                <button nbButton nbTooltip="Details" *ngIf="log.project!=null" (click)="openProjectDetails(log.project.id)" size="tiny" [routerLink]="['../../projects/project-details']" >
+                    <nb-icon icon="diagonal-arrow-right-up-outline"></nb-icon>
+                </button>
+                <button nbButton nbTooltip="User Details" *ngIf="log.project==null" [routerLink]="['../../users/user']">
+                    <nb-icon icon="diagonal-arrow-right-up-outline"></nb-icon>
+                </button>
             </div>
         </div>
     </nb-card-header>
 </nb-card>
 </div>
 </nb-card>
+<nb-card *ifDepartementPermission='["seeAllLogs"]'>
+    <div *ngFor="let log of userlogsList">
+    <nb-card style="margin-top: 1rem; margin-left: 1rem;margin-right: 1rem; " >
+        <nb-card-header >
+            <div class="row">
+                <div class="col-sm-1">
+                    <nb-user 
+                      name=""
+                      picture="assets/images/{{log.user.image}}">
+                      </nb-user>
+                </div>        
+                <div class="col-sm-8">
+                    <div>{{log.user.name}} {{log.description}}</div>
+                    <div class="row">
+                        <div class="col-sm-4" *ngIf="log.project!=null">Project : {{log.project.name}}</div>
+                        <div class="col-sm-8" *ngIf="log.task!=null">task description :{{log.task.description}}</div>                  
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    {{getDate(log.createdAt)}}
+                </div>
+                <div class="col-sm-1">
+                    <button nbButton nbTooltip="Details" *ngIf="log.project!=null" (click)="openProjectDetails(log.project.id)" [routerLink]="['../../projects/project-details']" >
+                        <nb-icon icon="diagonal-arrow-right-up-outline"></nb-icon>
+                    </button>
+                    <button nbButton nbTooltip="User Details" *ngIf="log.project==null" [routerLink]="['../../users/user']">
+                        <nb-icon icon="diagonal-arrow-right-up-outline"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </nb-card-header>
+    </nb-card>
+    </div>
+    </nb-card>

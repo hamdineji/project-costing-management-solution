@@ -13,6 +13,7 @@ import {
   NbIconModule,
   NbThemeModule,
   NbBadgeModule,
+  NbPopoverModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { NbSecurityModule } from '@nebular/security';
@@ -78,7 +79,7 @@ const PIPES = [
 ];
 
 @NgModule({
-  imports: [RouterModule,CommonModule, ...NB_MODULES],
+  imports: [NbPopoverModule,RouterModule,CommonModule, ...NB_MODULES],
   exports: [CommonModule, ...PIPES, ...COMPONENTS],
   declarations: [...COMPONENTS, ...PIPES ],
 })

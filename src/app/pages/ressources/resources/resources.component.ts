@@ -48,6 +48,7 @@ export class ResourcesComponent implements OnInit {
   addUserAbsence(){
     this.userService.addAbsence(this.selectedUser , this.date).subscribe(()=>{
       this.date= null;
+      this.getUsersDetails()
     })
   }
   showUserChart(name,usertasks,userVacations , userAbsences){
@@ -101,7 +102,6 @@ this.chartOptions = {
 };  }
   selectUser(user){
     this.selectedUser=user;
-    console.log('selectedUSer',this.selectedUser)
   }
 filter=date=>{
    var display=true ;
@@ -113,9 +113,6 @@ filter=date=>{
    return display
 }
 setTasks(tasks){
-  for(let task of tasks){
-
-  }
   this.tasks=tasks
 }
   getUsersDetails(){
@@ -124,10 +121,9 @@ setTasks(tasks){
     })
   }
   addVacation(){
-    console.log('selectedUSer',this.selectedUser)
     this.vacationService.createVacation(this.selectedUser,this.dateRange.start,this.dateRange.end).subscribe(()=>{
       this.dateRange=null;
-    })
+this.getUsersDetails()    })
   }
   getDate(date){
     var d = new Date(date),
@@ -164,10 +160,6 @@ this.dialogService.open(this.TasksList)
     var show = true ;
     tasks.forEach(element => {
       if(new Date(date)>new Date(element.startDate) && new Date(date)<new Date(element.endDate))
-      // console.log("startDate",element.startDate) ;
-      // console.log("endDate",element.endDate);
-      // console.log("newStartDate",new Date(element.startDate))
-      // console.log("newEndDate",new Date(element.endDate));
       show=false
     });
 return show

@@ -93,6 +93,40 @@ getUserWithProjects($id : ID ){
             score 
             budget 
             baselineDate
+            report{
+                id
+                name 
+                createdAt
+            }
+        }
+    }
+}
+`
+const userData = gql `
+query
+getUserWithProjects($id : ID ){
+    getUserWithProjects(id : $id ){
+        absences
+        vacation{
+            startDate
+            endDate
+        }
+        projects { 
+            id
+            status 
+            priority 
+            issues {
+            status
+            }
+            assumption{
+            status
+            } 
+            risks {
+            RiskStatus
+            }  
+            deps{
+            status
+            }
         }
     }
 }
@@ -138,6 +172,7 @@ getApprover(role,departement){
         variables:{role,departement} 
       })
 }
+usersData
 getUserById(id){
     return this.apollo.query({
         query : getUserById ,
@@ -154,6 +189,14 @@ getUserProjects(id){
     return this.apollo.query({
         query : getUserProjects ,
         variables : {id}
+    })
+}
+getData(id){
+    return this.apollo.query({
+        query :userData ,
+        variables : {
+            id
+        }
     })
 }
 addRole(role , userID){

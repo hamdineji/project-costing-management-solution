@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../@core/auth/ngrx-auth/appState';
 import { GetUserAction, SelectDepartementAction } from '../../../@core/auth/ngrx-auth/auth.actions';
 import { currentUserSelector } from '../../../@core/auth/ngrx-auth/auth.reducers';
+import * as io from 'socket.io-client'
 
 @Component({
   selector: 'ngx-departement',
@@ -23,13 +24,11 @@ export class DepartementComponent implements OnInit {
   userDepartements = []
   modifyCRsandDRsWindow : NbWindowRef
   modifyDRsWindow : NbWindowRef
-
+  subject
   @ViewChild('modifyCRsandDRs') modifyCRsandDRs: TemplateRef<any>;
   @ViewChild('modifyDRs') modifyDRs: TemplateRef<any>;
 
   constructor( private departementService: DepartementService ,
-    private roleService : RoleService ,
-    private userService:UserService,
     private themeService : NbThemeService ,
     private projectService : ProjectService,
     private windowService: NbWindowService ,
@@ -48,30 +47,35 @@ export class DepartementComponent implements OnInit {
     this.projectService.getAllProjects().subscribe((res : any)=>{
       this.projects= res.data.getAllProjects;
     })
+    this.departementService.getUserDepartements(userdata.user.id).subscribe((res: any)=>{
+      this.userDepartements=res.data.getUserDepartements
+      for(let d in this.userDepartements){
+        this.userDepartements[d].score= ""
+          this.userDepartements[d].progress=""
+          this.userDepartements[d].inProgressionProjects=""
+          this.departementService.getProjectsBydep(this.userDepartements[d].id).subscribe((res: any)=>{
+          this.userDepartements[d].score= Math.round(res.data.getProjectsBydep[2])
+          this.userDepartements[d].progress=Math.round(res.data.getProjectsBydep[1])
+          this.userDepartements[d].inProgressionProjects=res.data.getProjectsBydep[0]
+        })
+      }
+    })
     this.departementService.getAllDepartements().subscribe((data:any)=> {
-    for (let d of data.data.getAllDepartements){
+      this.departements=[]
+   if(data.data.getAllDepartements!=null){
+      for (let d of data.data.getAllDepartements){
       let progress =0
       let score = 0
-      let nbprojects =0
       let inProgressionProjects = 0
-      for(let p of this.projects){
-        if(p.departements[0].name==d.name){
-          progress+=p.progress
-          score +=p.score
-          nbprojects+=1 
-          if(p.status =='active'){
-            inProgressionProjects+=1
-          }
-        }    
-      }
-    if(userdata.user.departement.findIndex((x)=>x.id==d.id)!=-1){
-      this.userDepartements.push({data : d , CR : [{name:""}] , DR : [{name:""}], score : Math.round(score/nbprojects) , progress: Math.round(progress/nbprojects) , inProgressionProjects: inProgressionProjects});
-    }
-    this.departements.push({data : d , CR : [{name:""}] , DR : [{name:""}], score : Math.round(score/nbprojects) , progress: Math.round(progress/nbprojects) , inProgressionProjects: inProgressionProjects});
-  }
+        this.departementService.getProjectsBydep(d.id).subscribe((res: any)=>{
+          score= Math.round(res.data.getProjectsBydep[2])
+          progress=Math.round(res.data.getProjectsBydep[1])
+          inProgressionProjects=res.data.getProjectsBydep[0]
+          this.departements.push({data : d , CR : [{name:""}] , DR : [{name:""}], score : score, progress: progress , inProgressionProjects: inProgressionProjects});
+      })
+  }}
 });
   })
-
 }
 
 openModifyCRs(dep){

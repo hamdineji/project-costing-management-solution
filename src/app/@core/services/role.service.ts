@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
-import { Permission } from "../models/permission";
 import gql from 'graphql-tag';
 
 const getRoles = gql `

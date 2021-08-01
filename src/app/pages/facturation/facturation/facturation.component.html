@@ -1,1 +1,193 @@
-<p>facturation works!</p>
+<h2 style="text-align: center;">Facturation</h2>
+<div class="row">
+<div class="col-sm-8">
+</div>
+<div >
+    <nb-select name="select" placeholder="select your currency" style="width:15rem" size="small" (selectedChange)="changeCurrency($event)">
+        <nb-option  [value]="5">EUR </nb-option>
+        <nb-option  [value]="1">TND </nb-option>
+        <nb-option  [value]="2">USD </nb-option>
+        <nb-option  [value]="3">QAR </nb-option>
+        <nb-option  [value]="4">AED </nb-option>
+    </nb-select>
+</div>
+</div>
+<nb-card>
+    <div fxLayout="row wrap" style="margin-top:1rem ; margin-left: 1rem;" >
+        <div fxFlex="33%" *ngFor="let facture of allFactures">
+            <div style="margin-right: 1rem;">
+            <nb-card >
+                <nb-card-header>
+                    <div class="row">
+                        <div class="col-sm-10">
+                   {{facture.project.name}}
+                    </div>
+                    <div class="col-sm-1">
+                        <button nbButton nbTooltip="set status" size="tiny"  *ifPermission='["updateFacture"]' (click)="openSetFactureWindow(facture.id)">
+                            <nb-icon icon="checkmark-outline">
+                            </nb-icon>
+                        </button>
+                    </div>
+                   <div class="col-sm-1">
+                    <button nbButton nbTooltip="download facture" size="tiny"  *ifPermission='["saveFacture"]'  (click)="donwload(facture.id)">
+                        <nb-icon icon="download-outline">
+                        </nb-icon>
+                    </button>
+                   </div>
+                    </div>
+                </nb-card-header>
+                    <table  class="table table-bordered table-hover">
+                        <th>
+                            phase 
+                        </th>
+                        <td>
+                            {{facture.phase.name}}
+                        </td>
+                        <tr>
+                            <th>
+                                revenue
+                            </th>
+                            <td>
+                                {{facture.revenue * rates}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                status
+                            </th>
+                            <td>
+                                 {{facture.status}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                deadline
+                            </th>
+                            <td>
+                                {{getDate(facture.deadline)}}
+                            </td>
+                        </tr>
+                    </table>
+            </nb-card>
+        </div>
+        </div>
+    </div>
+</nb-card>
+<ng-template #facture>
+    <div  style="width : 50rem; margin-top : 2rem ;margin-left : 1rem;max-height: 70vh; overflow-x: hidden; ">
+        <div id="element-to-export">
+
+        <div class="row" >
+            <div class="col-sm-1"></div>
+            <h2 class="col-sm-7" >Facture</h2>
+            <div class="col-sm-2">     
+            <img src="../../../../assets/images/Proxym.png" class="logo"  style="width: 150px;">
+            </div>
+        </div>
+        <hr>
+    <div class="row" style="margin-top: 5%;">
+        <div class="col-sm-1"></div>
+        <table class="col-sm-6">
+            <tr>
+                <th> <p>De</p></th>
+            </tr>
+            <tr>
+                <th></th>
+                <td><h5>Proxym-IT</h5></td>
+            </tr>
+        <tr>
+        <th><p>adresse</p> </th>
+        <td><p>technopole de sousse 4051 -Tunisie</p></td>
+    </tr>
+       <tr> 
+        <th><p> email</p>  </th>
+        <td><p>contact@proxym-group.com</p></td>
+    </tr>
+    <tr>
+        <th><p>phone</p>  </th>
+        <td><p>(+216) 36 01 50 50</p></td>
+    </tr>
+    <tr>
+        <th><p>fax</p></th>
+        <td><p>(+216) 36 01 50 51</p></td>
+    </tr>
+    </table>
+    <table>
+        <tr>
+            <th> <p>A</p></th>
+        </tr>
+        <tr>
+            <th></th>
+            <td><h5>BH-Bank</h5></td>
+        </tr>
+    <tr>
+    <th><p>adresse</p> </th>
+    <td><p>18 Avenue Mohamed V Tunis</p></td>
+</tr>
+   <tr> 
+    <th><p> email</p>  </th>
+
+    <td><p>contact@bhbank.tn</p></td>
+</tr>
+<tr>
+    <th><p>phone</p>  </th>
+    <td><p>(+216) 71 126 000</p></td>
+</tr>
+    </table>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-1"></div>
+    <table class="col-sm-10 table table-bordered">
+        <tr>
+            <th>
+                Description
+            </th>
+            <th>
+                Budget
+            </th>
+            <th>
+                status
+            </th>
+            <th>
+                Deadline
+            </th>
+
+        </tr>
+        <tr>
+            <td>c'est la description de cette facture</td>
+            <td> 5000 euro</td>
+            <td>payed</td>
+            <td>27/06/2021</td>
+        </tr>
+    </table></div>
+    <div class="row" style="margin-top: 2%;">
+        <div class="col-sm-8">
+
+        </div>
+        <div class="col-sm-4">
+            <img src="../../../../assets/images/signature.JPG">
+        </div>
+    </div>
+    <div class="row" style="margin-top: 5%;">
+        <div class="col-sm-1">
+        </div>
+        <div class="col-sm-5">
+            <p>
+                caisse d'epargne
+            </p>
+            <p>IBAN : FR12 1234 5678</p>
+            <p>SWIFT/BIC : ABCDFRP1XXX</p>
+        </div>
+    </div>
+</div>
+</div>
+<div class="row">
+    <div class="col-sm-10">
+    </div>
+    <div>
+        <button nbButton (click)="setFacture()" status="primary">Save</button>
+    </div>
+
+</div>
+</ng-template>

@@ -5,7 +5,7 @@ import { ProjectsRoutingModule } from './projects-routing.module';
 import { ProjectComponent } from './project/project.component';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {NbButtonModule, NbCardModule,   NbCheckboxModule,   NbDatepickerModule,   NbIconModule, NbInputModule, NbListModule, NbPopoverModule, NbProgressBarModule, NbSelectModule, NbSidebarModule, NbTabsetModule, NbTooltipModule, NbUserModule,} from '@nebular/theme'
+import {NbButtonModule, NbCardModule,   NbCheckboxModule,   NbDatepickerModule,   NbIconModule, NbInputModule, NbLayoutModule, NbListModule, NbPopoverModule, NbProgressBarModule, NbSelectModule, NbSidebarModule, NbTabsetModule, NbTooltipModule, NbUserModule,} from '@nebular/theme'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ProjectDetailsComponent}from './project-details/projectDetails.component'
 @NgModule({
@@ -29,7 +29,8 @@ import {ProjectDetailsComponent}from './project-details/projectDetails.component
     NbDatepickerModule ,
     NbProgressBarModule,
     NbTabsetModule,
-    NbSidebarModule
+    NbSidebarModule ,
+    NbLayoutModule
   ]
 })
 export class ProjectsModule { }

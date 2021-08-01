@@ -1,5 +1,5 @@
 <h2 style="text-align: center; margin-bottom : 3rem">Proxym's Departements</h2>
-<nb-card *ifPermission='["getDepartements"]'>
+<nb-card *ifPermission='["seeAllDepartements"]'>
 <div fxLayout="row wrap" style="margin-top: 1rem;margin-left: 1rem;">
     <div fxFlex="33%" *ngFor="let p of departements">
     <div class="card-col" >
@@ -11,7 +11,6 @@
                   <nb-icon icon="npm-outline" style="margin-right: 1rem;" ></nb-icon>
                   {{p.data.name}}</h5>
             </div>
-            
             <div class="col-md-1">
               <nb-icon icon="briefcase-outline" nbTooltip="see projects" [routerLink]="['../../projects/project']" nbButton (click)="showProjects(p.data.id)"  ></nb-icon>
             </div>
@@ -20,7 +19,7 @@
         <table class="table ">
             <th scope="row" >
               <nb-icon icon="person-outline" style="margin-right: 1rem;"  ></nb-icon>
-              head Of Departements</th>
+              head Of Departement</th>
             <td>{{p.data.headOfDep}}</td>
           <tr>
             <th scope="row" >
@@ -33,7 +32,7 @@
                 </div>
               </div>
               <div class="col-sm-1">
-                <nb-icon icon="edit-outline" nbTooltip="edit CR approvers" nbButton (click)="openModifyCRs(p.data)" ></nb-icon>
+                <nb-icon icon="edit-outline" nbTooltip="edit CR approvers" nbButton (click)="openModifyCRs(p.data)" *ifPermission='["modifyDepartement"]'></nb-icon>
               </div>
             </td>
           </tr>
@@ -48,26 +47,26 @@
               </div>
             </div>
               <div class="col-sm-1">
-                <nb-icon icon="edit-outline" nbTooltip="edit DR approvers" nbButton (click)="openModifyDRs(p.data)" ></nb-icon>
+                <nb-icon icon="edit-outline" nbTooltip="edit DR approvers" *ifPermission='["modifyDepartement"]' nbButton (click)="openModifyDRs(p.data)" ></nb-icon>
               </div>
               </td>
           </tr>
           <tr>
             <th scope="row" >
-              <nb-icon icon="briefcase-outline" style="margin-right: 1rem;"  ></nb-icon>
+              <nb-icon icon="radio-button-on-outline" style="margin-right: 1rem;"  ></nb-icon>
               score</th>
             <td>{{p.score}}</td>
           </tr>
           <tr>
             <th scope="row" >
-              <nb-icon icon="briefcase-outline" style="margin-right: 1rem;"  ></nb-icon>
+              <nb-icon icon="pie-chart-outline" style="margin-right: 1rem;"  ></nb-icon>
               progress</th>
             <td>{{p.progress}}</td>
           </tr>
           <tr>
             <th scope="row" >
               <nb-icon icon="people-outline" style="margin-right: 1rem;"  ></nb-icon>
-              number of Users </th>
+              members </th>
             <td>{{p.data.users[0]}}</td>
           </tr>
         </table>
@@ -76,7 +75,7 @@
     </div>
 </div>
 </nb-card>
-<nb-card *ifDepartementPermission='["getDepartements"]'>
+<nb-card *ifDepartementPermission='["seeAllDepartements"]'>
   <div fxLayout="row wrap" style="margin-top: 1rem;margin-left: 1rem;">
       <div fxFlex="33%" *ngFor="let p of userDepartements">
       <div class="card-col" >
@@ -86,26 +85,31 @@
               <div class="col-md-10">
                   <h5>
                     <nb-icon icon="npm-outline" style="margin-right: 1rem;" ></nb-icon>
-                    {{p.data.name}}</h5>
-              </div>
-              <div class="col-md-2">
-                <nb-icon icon="edit-outline" nbTooltip="edit departement" nbButton (click)="openModifyDRs(p.data)" ></nb-icon>
+                    {{p.name}}</h5>
               </div>
             </div>
           </nb-card-header>
           <table class="table ">
               <th scope="row" >
                 <nb-icon icon="person-outline" style="margin-right: 1rem;"  ></nb-icon>
-                head Of Departements</th>
-              <td>{{p.data.headOfDep}}</td>
+                head Of Departement</th>
+              <td>{{p.headOfDep}}</td>
             <tr>
               <th scope="row" >
                 <nb-icon icon="sync-outline" style="margin-right: 1rem;"  ></nb-icon>
                 CR approvers</th>
               <td >
-                <div *ngFor="let item of p.data.CRapprovers">
-                  {{item.name}}
+                <div class="row">
+                  <div class="col-sm-8">
+                    <div *ngFor="let item of p.CRapprovers">
+                      {{item.name}}
+                    </div>
+                  </div>
+                  <div>
+                    <nb-icon icon="edit-outline" nbTooltip="edit CR approvers" nbButton (click)="openModifyCRs(p)" *ifPermission='["modifyDepartement"]'></nb-icon>
+                  </div>
                 </div>
+                
                  </td>
             </tr>
             <tr>
@@ -113,28 +117,35 @@
                 <nb-icon icon="paper-plane-outline" style="margin-right: 1rem;"  ></nb-icon>
                 DR approvers</th>
               <td>
-                <div *ngFor="let dr of p.data.DRapprovers">
-                  {{dr.name}}
+                <div class="row">
+                  <div class="col-sm-8">
+                  <div *ngFor="let dr of p.DRapprovers">
+                    {{dr.name}}
+                  </div>
                 </div>
+                  <nb-icon icon="edit-outline" nbTooltip="edit DR approvers" *ifPermission='["modifyDepartement"]' nbButton (click)="openModifyDRs(p)" ></nb-icon>
+
+                </div>
+                
                 </td>
             </tr>
             <tr>
               <th scope="row" >
-                <nb-icon icon="briefcase-outline" style="margin-right: 1rem;"  ></nb-icon>
+                <nb-icon icon="radio-button-on-outline" style="margin-right: 1rem;"  ></nb-icon>
                 score</th>
               <td>{{p.score}}</td>
             </tr>
             <tr>
               <th scope="row" >
-                <nb-icon icon="briefcase-outline" style="margin-right: 1rem;"  ></nb-icon>
+                <nb-icon icon="pie-chart-outline" style="margin-right: 1rem;"  ></nb-icon>
                 progress</th>
               <td>{{p.progress}}</td>
             </tr>
             <tr>
-              <th scope="row" >
+              <th scope="row">
                 <nb-icon icon="people-outline" style="margin-right: 1rem;"  ></nb-icon>
-                number of Users </th>
-              <td>{{p.data.users[0]}}</td>
+                members </th>
+              <td>{{p.users[0]}}</td>
             </tr>
           </table>
         </nb-card>
@@ -158,8 +169,7 @@
 </ng-template>
 <ng-template #modifyDRs let-data>
   <div style="width: 35rem;">
-<form >
-
+<form>
   <div class="mb-3">
     <label>Users</label>
   <div fxLayout="row wrap"> 

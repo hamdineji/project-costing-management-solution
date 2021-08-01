@@ -1,173 +1,212 @@
-
-<nb-card *ifPermission='["getAllTasks"]'>
-    <nb-card-header>
-        <div class="row">
-            <div class="col-sm-5">
-                list of tasks
-            </div>
-            <div class="col-sm-3">
-                <nb-select name="select" placeholder="select Task by User" style="width:15rem" size="small" (selectedChange)="selectUserFilter($event)">
-                    <nb-option  [value]="0">All Tasks </nb-option>
-                    <nb-option *ngFor="let item of allUsers" [value]="item.id">{{item.name}} </nb-option>
-                </nb-select>
-              </div>
-            <div class="col-sm-3">
-                <nb-select name="select" placeholder="select Task by Project" style="width:15rem" size="small" (selectedChange)="selectProjectFilter($event)">
-                    <nb-option  [value]="0">All Tasks </nb-option>
-                    <nb-option *ngFor="let item of allProjects" [value]="item.id">{{item.name}} </nb-option>
-                </nb-select>
-              </div>
-        </div>
-    </nb-card-header>
-    <nb-card-header >
-        <div style="max-height: 60vh; overflow-y: scroll">
-        <nb-card *ngFor="let item of allTasks" >
-             <nb-card-header style="background-color: lightblue;">
-                 <div class="row">
-                 <div class="col-sm-2">
-                    {{item.project.name}}
-                </div>
-                 <div class="col-sm-3" *ngIf="item.description.length>30">
-                     <p>{{item.description.substr(0,30)}}...</p>
-                 </div>
-                 <div class="col-sm-3" *ngIf="!(item.description.length>30)">
-                    <p>{{item.description}}</p>
-                </div>
-                <div class="col-sm-1">
-                    {{item.status}} 
-                </div>
-                <div class="col-sm-1">
-                    <nb-icon icon="bulb-outline" *ngIf="item.status=='new'" style="color: crimson;"></nb-icon>
-                    <nb-icon icon="activity-outline" *ngIf="item.status=='in progress'" style="color: mediumseagreen;"></nb-icon>
-                    <nb-icon icon="checkmark-outline" *ngIf="item.status=='done'" style="color: darkblue;"></nb-icon>
-                </div>
-                <div class="col-sm-2">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            start
-                        </div>
-                        <div class="col-sm-8" style="margin-top: 0.15rem;">
-                            <p>{{getDate(item.startDate)}}</p>
-                        </div>
-                    </div>    
-                </div>
-                <div class="col-sm-2">
-                    <div class="row">
-                      <div class="col-sm-2">end </div>
-                        <div class="col-sm-8" style="margin-top: 0.15rem;"><p> {{getDate(item.endDate)}}</p></div>  
-                    </div>
-                </div>
-                <div class ="col-sm-1">
-                    <nb-icon icon="arrow-forward-outline" nbTooltip="update task status" (click)="setTaskStatus(item)"> </nb-icon>
-                    <nb-icon icon="more-horizontal-outline" nbTooltip="change request" style="margin-left: 1rem;" (click)="showTaskDetails(item)" [nbPopover]="popoverTaskTemplate" > </nb-icon>
-                </div>
-                </div>
-             </nb-card-header>
-        </nb-card>
-    </div>
-
-    </nb-card-header>
-</nb-card>   
-<nb-card *ifDepartementPermission='["getAllTasks"]'>
-    <nb-card-header>
-        <div class="row">
-            <div class="col-sm-6">
-                list of tasks
-            </div>
-            <div class="col-sm-3">
-                <nb-select name="select" placeholder="select Task by Project" style="width:15rem" size="small" (selectedChange)="selectUserProjectFilter($event)">
-                    <nb-option  [value]="0">All Tasks </nb-option>
-                    <nb-option *ngFor="let item of userProjects" [value]="item.id">{{item.name}} </nb-option>
-                </nb-select>
-              </div>
-        </div>
-    </nb-card-header>
-    <nb-card-header>
-        <div style="max-height: 100vh; overflow-y: scroll">
-            <div *ngIf="tasks.length==0" style="text-align: center;"  >
-                No Tasks Founded for this project
-            </div>
-        <nb-card *ngFor="let item of tasks" >
-             <nb-card-header style="background-color: lightblue;">
-                 <div class="row">
-                 <div class="col-sm-2">
-                    {{item.project.name}}
-                </div>
-                 <div class="col-sm-3" *ngIf="item.description.length>30">
-                     <p>{{item.description.substr(0,30)}}...</p>
-                 </div>
-                 <div class="col-sm-3" *ngIf="!(item.description.length>30)">
-                    <p>{{item.description}}</p>
-                </div>
-                <div class="col-sm-1">
-                    {{item.status}} 
-                </div>
-                <div class="col-sm-1">
-                    <nb-icon icon="bulb-outline" *ngIf="item.status=='new'" style="color: crimson;"></nb-icon>
-                    <nb-icon icon="activity-outline" *ngIf="item.status=='in progress'" style="color: mediumseagreen;"></nb-icon>
-                    <nb-icon icon="checkmark-outline" *ngIf="item.status=='done'" style="color: darkblue;"></nb-icon>
-                </div>
-                <div class="col-sm-2">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            start
-                        </div>
-                        <div class="col-sm-8" style="margin-top: 0.15rem;">
-                            <p>{{getDate(item.startDate)}}</p>
-                        </div>
-                    </div>    
-                </div>
-                <div class="col-sm-2">
-                    <div class="row">
-                      <div class="col-sm-2">end </div>
-                        <div class="col-sm-8" style="margin-top: 0.15rem;"><p> {{getDate(item.endDate)}}</p></div>  
-                    </div>
-                </div>
-                <div class ="col-sm-1">
-                    <nb-icon icon="arrow-forward-outline" nbTooltip="update task status" (click)="setTaskStatus(item)"> </nb-icon>
-                    <nb-icon icon="more-horizontal-outline" nbTooltip="change request" style="margin-left: 1rem;" (click)="showTaskDetails(item)" [nbPopover]="popoverTaskTemplate" > </nb-icon>
-                </div>
-                </div>
-             </nb-card-header>
-        </nb-card>
-    </div>
-    </nb-card-header>
-</nb-card> 
-<div class="row">
+<div class="row" style="margin-bottom: 0.5rem;"  *ifPermission='["seeAllTasks"]' >
+<div class="col-sm-5">
+</div>
+<div class="col-sm-3">
+    <nb-select name="select" placeholder="select Task by User" style="width:15rem" size="small" (selectedChange)="selectUserFilter($event)">
+        <nb-option  [value]="0">All Tasks </nb-option>
+        <nb-option *ngFor="let item of allUsers" [value]="item.id">{{item.name}} </nb-option>
+    </nb-select>
+</div> 
+<nb-select name="select" placeholder="select Task by Project" style="width:15rem" size="small" (selectedChange)="selectProjectFilter($event)">
+    <nb-option  [value]="0">All Tasks </nb-option>
+    <nb-option *ngFor="let item of allProjects" [value]="item.id">{{item.name}} </nb-option>
+</nb-select>
+</div>
+<div class="row" *ifPermission='["seeAllTasks"]'>
 <div class="col-sm-4">
-
     <nb-card class="Listclass " size="medium">
-        <nb-card-header>
-            Todo List
+        <nb-card-header class="cardHeader">
+            <div class="row">
+                <div class="col-sm-10">
+                    Todo 
+                </div>
+            <nb-icon icon="bulb-outline" style="color: crimson;"></nb-icon>
+            </div>
+            
           </nb-card-header>
-        <nb-list>
-            <nb-list-item *ngFor="let item of allTasks">
-              <div class="row">
-                  <div class="col-sm-4">
-                    {{ item.project.name }} 
-                  </div>
-                  <div class="col-sm-5">
-                      {{item.endDate}}
-                  </div>
-                  <div class="col-sm-2">
-                    {{item.status}}
-                  </div>
-
-              </div>
-              
-                
-            </nb-list-item>
-        </nb-list>
+          <nb-card-body>
+            <div *ngFor="let task of allnewTasks">
+                <nb-card (click)="showTaskDetails(task)" [nbPopover]="popoverTaskTemplate" >
+                <nb-card-header>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <nb-user
+                                picture = "assets/images/{{task.user.image}}"
+                             name = "{{task.user.name}}"></nb-user>
+                        </div>
+                        <div class="col-sm-4">
+                            {{ task.project.name}} 
+                        </div>
+                        <div class="col-sm-2" style="text-align: center;">
+                            {{getDate(task.endDate)}}
+                        </div>
+                    </div>
+                </nb-card-header>
+            </nb-card>
+            </div>
+           </nb-card-body>
+    </nb-card>
+</div>
+<div class="col-sm-4">
+    <nb-card class="Listclass " size="medium">
+        <nb-card-header  class="cardHeader">
+            <div class="row">
+                <div class="col-sm-10">
+                   Doing
+                </div>
+                <nb-icon icon="activity-outline" style="color: mediumseagreen;"></nb-icon>
+            </div>          
+        </nb-card-header>
+        <nb-card-body>
+            <div *ngFor="let task of allInprogressTasks">
+                <nb-card (click)="showTaskDetails(task)" [nbPopover]="popoverTaskTemplate" >
+                <nb-card-header>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <nb-user
+                                picture = "assets/images/{{task.user.image}}"
+                             name = "{{task.user.name}}"></nb-user>
+                        </div>
+                        <div class="col-sm-4">
+                            {{ task.project.name}} 
+                        </div>
+                        <div class="col-sm-2" style="text-align: center;">
+                            {{getDate(task.endDate)}}
+                        </div>
+                    </div>
+                </nb-card-header>
+            </nb-card>
+            </div>
+           </nb-card-body>
+    </nb-card>
+</div>
+<div class="col-sm-4">
+    <nb-card class="Listclass " size="medium">
+        <nb-card-header class="cardHeader">
+            <div class="row">
+                <div class="col-sm-10">
+                    done 
+                </div>
+                <nb-icon icon="checkmark-outline" style="color: darkblue;"></nb-icon>
+            </div>          </nb-card-header>
+       <nb-card-body>
+        <div *ngFor="let task of alldoneTasks">
+            <nb-card (click)="showTaskDetails(task)" [nbPopover]="popoverTaskTemplate" >
+            <nb-card-header>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <nb-user
+                            picture = "assets/images/{{task.user.image}}"
+                         name = "{{task.user.name}}"></nb-user>
+                    </div>
+                    <div class="col-sm-4">
+                        {{ task.project.name}} 
+                    </div>
+                    <div class="col-sm-2" style="text-align: center;">
+                        {{getDate(task.endDate)}}
+                    </div>
+                </div>
+            </nb-card-header>
+        </nb-card>
+        </div>
+       </nb-card-body>
     </nb-card>
 </div>
 </div>
-
-
-
-
-
+<div class="row" style="margin-bottom: 0.5rem;" *ifDepartementPermission='["seeAllTasks"]'>
+    <div class="col-sm-8">
+    </div>
+    <nb-select name="select" placeholder="select Task by Project" style="width:15rem" size="small" (selectedChange)="selectUserProjectFilter($event)">
+        <nb-option  [value]="0">All Tasks </nb-option>
+        <nb-option *ngFor="let item of allProjects" [value]="item.id">{{item.name}} </nb-option>
+    </nb-select>
+    </div>
+<div class="row" *ifDepartementPermission='["seeAllTasks"]' >
+    <div class="col-sm-4">
+        <nb-card class="Listclass " size="medium">
+            <nb-card-header class="cardHeader">
+                <div class="row">
+                    <div class="col-sm-10">
+                        Todo List
+                    </div>
+                <nb-icon icon="bulb-outline" style="color: crimson;"></nb-icon>
+                </div>  
+              </nb-card-header>
+              <nb-card-body>
+                <div *ngFor="let task of usernewTasks">
+                    <nb-card>
+                    <nb-card-header>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                {{ task.project.name}} 
+                            </div>
+                            <div class="col-sm-2" style="text-align: center;">
+                               <p>{{getDate(task.endDate)}}</p> 
+                            </div>
+                        </div>
+                    </nb-card-header>
+                </nb-card>
+                </div>
+               </nb-card-body>
+        </nb-card>
+    </div>
+    <div class="col-sm-4">
+        <nb-card class="Listclass " size="medium">
+            <nb-card-header  class="cardHeader">
+                <div class="row">
+                    <div class="col-sm-10">
+                        in progress List
+                    </div>
+                    <nb-icon icon="activity-outline" style="color: mediumseagreen;"></nb-icon>
+                </div>          
+            </nb-card-header>
+            <nb-card-body>
+                <div *ngFor="let task of userInprogressTasks">
+                    <nb-card>
+                    <nb-card-header>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                {{ task.project.name}} 
+                            </div>
+                            <div class="col-sm-2" style="text-align: center;">
+                                {{getDate(task.endDate)}}
+                            </div>
+                        </div>
+                    </nb-card-header>
+                </nb-card>
+                </div>
+               </nb-card-body>
+        </nb-card>
+    </div>
+    <div class="col-sm-4">
+        <nb-card class="Listclass " size="medium">
+            <nb-card-header class="cardHeader">
+                <div class="row">
+                    <div class="col-sm-10">
+                        done List
+                    </div>
+                    <nb-icon icon="checkmark-outline" style="color: darkblue;"></nb-icon>
+                </div>          </nb-card-header>
+           <nb-card-body>
+            <div *ngFor="let task of userdoneTasks">
+                <nb-card>
+                <nb-card-header>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            {{ task.project.name}} 
+                        </div>
+                        <div class="col-sm-2" style="text-align: center;">
+                            {{getDate(task.endDate)}}
+                        </div>
+                    </div>
+                </nb-card-header>
+            </nb-card>
+            </div>
+           </nb-card-body>
+        </nb-card>
+    </div>
+    </div>
 <ng-template #popoverTaskTemplate >
-
     <nb-card>
         <nb-card-header style="background-color: bisque;">
             <div class="row">

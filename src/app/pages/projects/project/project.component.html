@@ -1,5 +1,5 @@
 <h2 style="text-align: center; margin-bottom : 3rem">Project List</h2>
-<nb-card *ifPermission='["getAllProjects"]'>
+<nb-card *ifPermission='["seeAllProjects"]'>
 <div class="row show-grid" style="margin-top: 1rem; ">
   <div class="col-md-6" style="margin-left: 2rem;">
     <h3>all proxym's projects</h3> 
@@ -16,18 +16,15 @@
     </nb-select>
   </div>
   <div class="col-md-2">
-    <button (click)="collapse()">cccc</button>
-    <button (click)="noncollapse()">cccc</button>
-
-
-<button (click)="openAddProjectForm()" size="small" nbButton> 
+<button (click)="openAddProjectForm()" size="small" nbButton *ifPermission='["createProject"]'> 
   <nb-icon icon="plus-outline"></nb-icon>
   Add Project</button>
-  </div>
+
+</div>
 </div>
 <div>
 <div fxLayout="row wrap" style="margin-left: 2rem;">
-    <div fxFlex="33%" *ngFor="let p of allProjects">
+    <div fxFlex="30%" *ngFor="let p of allProjects">
     <div class="card-col">
       <nb-reveal-card style="margin-right: 1rem;">
         <nb-card-front>
@@ -125,7 +122,7 @@
 </div>
 </nb-card>
 <nb-card >
-<div  style="margin-top: 1rem; margin-left: 1rem;" *ifDepartementPermission='["getAllProjects"]'>
+<div  style="margin-top: 1rem; margin-left: 1rem;" *ifDepartementPermission='["seeAllProjects"]'>
   <h3>your projects</h3> 
 <div fxLayout="row wrap" >
     <div fxFlex="33%" *ngFor="let p of userProjects">
@@ -461,7 +458,3 @@
   </div>
   </form>
 </ng-template>
-
-<nb-sidebar start right tag="sidebar" style="background-color: darkblue;">
- 
-</nb-sidebar>

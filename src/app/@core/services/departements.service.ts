@@ -20,6 +20,28 @@ query {
   }
 }
 `
+const getUserDepartements = gql `
+query getUserDepartements($id : ID){
+  getUserDepartements( id : $id){
+    id
+    name  
+    users
+    headOfDep
+    CRapprovers{
+      id
+      name
+    }
+    DRapprovers{
+      id
+      name
+    }
+    }
+}`
+
+const getProjectsBydep = gql `
+query getProjectsBydep($id : ID){
+  getProjectsBydep( id : $id)}`
+
 const getDepartementById = gql `
 query getDepartementById($id : ID){
     getDepartementById( id : $id){
@@ -34,10 +56,7 @@ query getDepartementById($id : ID){
           name
         }
     }
-}
-
-
-`
+}`
 const createDepartement = gql `
 mutation 
 createDepartement($name : String ){
@@ -101,6 +120,18 @@ getDepartementById(id){
         query : getDepartementById ,
         variables : {id}
       })
+}
+getProjectsBydep(id){
+  return  this.apollo.query({
+      query : getProjectsBydep ,
+      variables : {id}
+    })
+}
+getUserDepartements(id){
+  return  this.apollo.query({
+      query : getUserDepartements ,
+      variables : {id}
+    })
 }
 createDepartement(name){
   return this.apollo.mutate({

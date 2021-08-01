@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Apollo , gql} from "apollo-angular";
-import { Permission } from "../models/permission";
 
 const getPhasesByProject = gql `
 query 
